@@ -28,12 +28,10 @@ import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.gui.GuiTextField;
 import org.lwjgl.input.Keyboard;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.*;
 
@@ -126,13 +124,7 @@ public class GuiAltManager extends GuiScreen {
         for (int i = 0; i < LiquidBounce.fileManager.accountsConfig.getAccounts().size(); i++) {
             MinecraftAccount minecraftAccount = LiquidBounce.fileManager.accountsConfig.getAccounts().get(i);
 
-            if (minecraftAccount != null && (
-                    ((
-                            // When password is empty, the account is cracked
-                            minecraftAccount.getPassword() == null || minecraftAccount.getPassword().isEmpty()) && minecraftAccount.getName() != null && minecraftAccount.getName().equals(mc.session.getUsername()))
-                            // When the account is a premium account match the IGN
-                            || minecraftAccount.getAccountName() != null && minecraftAccount.getAccountName().equals(mc.session.getUsername())
-            )) {
+            if (minecraftAccount != null && (((minecraftAccount.getPassword() == null || minecraftAccount.getPassword().isEmpty()) && minecraftAccount.getName() != null && minecraftAccount.getName().equals(mc.session.getUsername())) || minecraftAccount.getAccountName() != null && minecraftAccount.getAccountName().equals(mc.session.getUsername()))) {
                 index = i;
                 break;
             }
@@ -141,14 +133,12 @@ public class GuiAltManager extends GuiScreen {
         altsList.elementClicked(index, false, 0, 0);
         altsList.scrollBy(index * altsList.slotHeight);
 
-        searchField = new GuiTextField(2, Fonts.font40, width - width / 4 - 4, 10, width / 4, 20);
-        searchField.setMaxStringLength(Integer.MAX_VALUE);
-
         int j = 22;
         this.buttonList.add(new GuiButton(1, width - 80, j + 24, 70, 20, "Add"));
         this.buttonList.add(new GuiButton(2, width - 80, j + 24 * 2, 70, 20, "Remove"));
         this.buttonList.add(new GuiButton(7, width - 80, j + 24 * 3, 70, 20, "Import"));
-        this.buttonList.add(new GuiButton(8, width - 80, j + 24 * 4, 70, 20, "Copy"));
+        this.buttonList.add(new GuiButton(12, width - 80, j + 24 * 4, 70, 20, "Export"));
+        this.buttonList.add(new GuiButton(8, width - 80, j + 24 * 5, 70, 20, "Copy"));
 
         this.buttonList.add(new GuiButton(0, width - 80, height - 65, 70, 20, "Back"));
 
@@ -303,6 +293,39 @@ public class GuiAltManager extends GuiScreen {
                 break;
             case 11:
                 mc.displayGuiScreen(new GuiDonatorCape(this));
+                break;
+            case 12:
+                if (LiquidBounce.fileManager.accountsConfig.getAccounts().size() == 0) {
+                    status = "§cThe list is empty.";
+                    return;
+                }
+
+                final File selectedFile = MiscUtils.saveFileChooser();
+
+                if (selectedFile == null || selectedFile.isDirectory())
+                    return;
+
+                try {
+                    if (!selectedFile.exists())
+                        selectedFile.createNewFile();
+
+                    final FileWriter fileWriter = new FileWriter(selectedFile);
+
+                    for (MinecraftAccount account : LiquidBounce.fileManager.accountsConfig.getAccounts()) {
+                        if (account.isCracked()) {
+                            fileWriter.write(account.getName() + "\r\n");
+                        } else {
+                            fileWriter.write(account.getName() + ":" + account.getPassword() + "\r\n");
+                        }
+                    }
+
+                    fileWriter.flush();
+                    fileWriter.close();
+                    JOptionPane.showMessageDialog(null, "Exported successfully!", "AltManager", JOptionPane.INFORMATION_MESSAGE);
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    MiscUtils.showErrorPopup("Error", "Exception class: " + e.getClass().getName() + "\nMessage: " + e.getMessage());
+                }
                 break;
         }
     }

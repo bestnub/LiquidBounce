@@ -66,7 +66,7 @@ public abstract class MixinGuiConnecting extends GuiScreen {
 
     @Inject(method = "connect", at = @At(value = "NEW", target = "net/minecraft/network/login/client/C00PacketLoginStart"), cancellable = true)
     private void mcLeaks(CallbackInfo callbackInfo) {
-        if(MCLeaks.isAltActive()) {
+        if (MCLeaks.isAltActive()) {
             networkManager.sendPacket(new C00PacketLoginStart(new GameProfile(null, MCLeaks.getSession().getUsername())));
             callbackInfo.cancel();
         }
@@ -83,7 +83,7 @@ public abstract class MixinGuiConnecting extends GuiScreen {
             InetAddress inetaddress = null;
 
             try {
-                if(cancel) {
+                if (cancel) {
                     return;
                 }
 
@@ -92,21 +92,21 @@ public abstract class MixinGuiConnecting extends GuiScreen {
                 networkManager.setNetHandler(new NetHandlerLoginClient(networkManager, mc, previousGuiScreen));
                 networkManager.sendPacket(new C00Handshake(47, ip, port, EnumConnectionState.LOGIN, true));
                 networkManager.sendPacket(new C00PacketLoginStart(MCLeaks.isAltActive() ? new GameProfile(null, MCLeaks.getSession().getUsername()) : mc.getSession().getProfile()));
-            }catch(UnknownHostException unknownhostexception) {
-                if(cancel)
+            } catch (UnknownHostException unknownhostexception) {
+                if (cancel)
                     return;
 
                 logger.error("Couldn\'t connect to server", unknownhostexception);
                 mc.displayGuiScreen(new GuiDisconnected(previousGuiScreen, "connect.failed", new ChatComponentTranslation("disconnect.genericReason", "Unknown host")));
-            }catch(Exception exception) {
-                if(cancel) {
+            } catch (Exception exception) {
+                if (cancel) {
                     return;
                 }
 
                 logger.error("Couldn\'t connect to server", exception);
                 String s = exception.toString();
 
-                if(inetaddress != null) {
+                if (inetaddress != null) {
                     String s1 = inetaddress.toString() + ":" + port;
                     s = s.replaceAll(s1, "");
                 }
@@ -118,7 +118,7 @@ public abstract class MixinGuiConnecting extends GuiScreen {
 
     /**
      * @author CCBlueX
-     */
+     *//*
     @Overwrite
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
@@ -137,5 +137,5 @@ public abstract class MixinGuiConnecting extends GuiScreen {
         Fonts.font35.drawCenteredString(ip, scaledResolution.getScaledWidth() / 2, scaledResolution.getScaledHeight() / 4 + 120, 0x5281FB, true);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
-    }
+    }*/
 }

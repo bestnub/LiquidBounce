@@ -49,7 +49,7 @@ public abstract class MixinGuiDisconnected extends MixinGuiScreen {
     private GuiButton forgeBypassButton;
     private int reconnectTimer;
 
-    @Inject(method = "initGui", at = @At("RETURN"))
+    /*@Inject(method = "initGui", at = @At("RETURN"))
     private void initGui(CallbackInfo callbackInfo) {
         reconnectTimer = 0;
         buttonList.add(reconnectButton = new GuiButton(1, this.width / 2 - 100, this.height / 2 + field_175353_i / 2 + this.fontRendererObj.FONT_HEIGHT + 22, 98, 20, "Reconnect"));
@@ -125,7 +125,7 @@ public abstract class MixinGuiDisconnected extends MixinGuiScreen {
         if (AutoReconnect.INSTANCE.isEnabled()) {
             this.updateReconnectButton();
         }
-    }
+    }*/
 
     private void drawReconnectDelaySlider() {
         buttonList.add(autoReconnectDelaySlider =

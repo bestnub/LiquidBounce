@@ -33,7 +33,7 @@ public abstract class MixinGuiButtonExt extends GuiButton {
    /**
     * @author CCBlueX
     */
-   @Overwrite
+   /*@Overwrite
    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
       if (visible) {
          final FontRenderer fontRenderer =
@@ -75,5 +75,5 @@ public abstract class MixinGuiButtonExt extends GuiButton {
                                            this.yPosition + (this.height - 5) / 2F, 14737632);
          GlStateManager.resetColor();
       }
-   }
+   }*/
 }

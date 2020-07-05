@@ -41,7 +41,7 @@ public class MixinGuiEditSign extends GuiScreen {
     private GuiTextField signCommand3;
     private GuiTextField signCommand4;
 
-    @Inject(method = "initGui", at = @At("RETURN"))
+    /*@Inject(method = "initGui", at = @At("RETURN"))
     private void initGui(final CallbackInfo callbackInfo) {
         buttonList.add(toggleButton = new GuiButton(1, this.width / 2 - 100, this.height / 4 + 145, enabled ? "Disable Formatting codes" : "Enable Formatting codes"));
 
@@ -99,9 +99,9 @@ public class MixinGuiEditSign extends GuiScreen {
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    /**
+    *//**
      * @author CCBlueX
-     */
+     *//*
     @Overwrite
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         this.signCommand1.textboxKeyTyped(typedChar, keyCode);
@@ -133,5 +133,5 @@ public class MixinGuiEditSign extends GuiScreen {
         if(keyCode == 1) {
             this.actionPerformed(this.doneBtn);
         }
-    }
+    }*/
 }

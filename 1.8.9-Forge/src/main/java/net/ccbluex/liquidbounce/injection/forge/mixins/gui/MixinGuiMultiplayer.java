@@ -22,7 +22,7 @@ public abstract class MixinGuiMultiplayer extends MixinGuiScreen {
 
     private GuiButton bungeeCordSpoofButton;
 
-    @Inject(method = "initGui", at = @At("RETURN"))
+    /*@Inject(method = "initGui", at = @At("RETURN"))
     private void initGui(CallbackInfo callbackInfo) {
         buttonList.add(new GuiButton(997, 5, 8, 98, 20, "AntiForge"));
         buttonList.add(bungeeCordSpoofButton = new GuiButton(998, 108, 8, 98, 20, "BungeeCord Spoof: " + (BungeeCordSpoof.enabled ? "On" : "Off")));
@@ -44,5 +44,5 @@ public abstract class MixinGuiMultiplayer extends MixinGuiScreen {
                 mc.displayGuiScreen(new GuiTools((GuiScreen) (Object) this));
                 break;
         }
-    }
+    }*/
 }

@@ -91,7 +91,7 @@ public abstract class MixinGuiSlot implements IMixinGuiSlot {
     /**
      * @author CCBlueX
      */
-    @Overwrite
+    /*@Overwrite
     public void drawScreen(int mouseXIn, int mouseYIn, float p_148128_3_) {
         if(this.field_178041_q) {
             this.mouseX = mouseXIn;
@@ -178,7 +178,7 @@ public abstract class MixinGuiSlot implements IMixinGuiSlot {
             GlStateManager.enableAlpha();
             GlStateManager.disableBlend();
         }
-    }
+    }*/
 
     /**
      * @author CCBlueX

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiIngameMenu.class)
 public abstract class MixinGuiIngameMenu extends MixinGuiScreen {
 
-    @Inject(method = "initGui", at = @At("RETURN"))
+    /*@Inject(method = "initGui", at = @At("RETURN"))
     private void initGui(CallbackInfo callbackInfo) {
         if(!this.mc.isIntegratedServerRunning())
             this.buttonList.add(new GuiButton(1337, this.width / 2 - 100, this.height / 4 + 128, "Reconnect"));
@@ -28,5 +28,5 @@ public abstract class MixinGuiIngameMenu extends MixinGuiScreen {
             mc.theWorld.sendQuittingDisconnectingPacket();
             ServerUtils.connectToLastServer();
         }
-    }
+    }*/
 }

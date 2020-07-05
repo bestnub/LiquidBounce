@@ -78,7 +78,7 @@ public abstract class MixinGuiScreen {
     /**
      * @author CCBlueX
      */
-    @Inject(method = "drawBackground", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "drawBackground", at = @At("HEAD"), cancellable = true)
     private void drawClientBackground(final CallbackInfo callbackInfo) {
         GlStateManager.disableLighting();
         GlStateManager.disableFog();
@@ -111,7 +111,7 @@ public abstract class MixinGuiScreen {
                 ParticleUtils.drawParticles(Mouse.getX() * width / mc.displayWidth, height - Mouse.getY() * height / mc.displayHeight - 1);
             callbackInfo.cancel();
         }
-    }
+    }*/
 
     @Inject(method = "drawBackground", at = @At("RETURN"))
     private void drawParticles(final CallbackInfo callbackInfo) {

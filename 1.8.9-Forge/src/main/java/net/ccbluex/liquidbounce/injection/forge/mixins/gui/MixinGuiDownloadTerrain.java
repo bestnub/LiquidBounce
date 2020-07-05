@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiDownloadTerrain.class)
 public abstract class MixinGuiDownloadTerrain extends MixinGuiScreen {
 
-    @Inject(method = "initGui", at = @At(value = "RETURN"))
+    /*@Inject(method = "initGui", at = @At(value = "RETURN"))
     private void injectDisconnectButton(CallbackInfo ci) {
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120 + 12, I18n.format("gui.cancel")));
     }
@@ -44,5 +44,5 @@ public abstract class MixinGuiDownloadTerrain extends MixinGuiScreen {
             }
         }
 
-    }
+    }*/
 }

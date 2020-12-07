@@ -5,10 +5,12 @@
  */
 package net.ccbluex.liquidbounce.utils
 
+import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.api.minecraft.client.entity.player.IEntityPlayer
 import net.ccbluex.liquidbounce.api.minecraft.util.WMathHelper
 import net.ccbluex.liquidbounce.api.minecraft.util.WVec3
 import net.ccbluex.liquidbounce.event.StrafeEvent
+import net.ccbluex.liquidbounce.features.module.modules.`fun`.GCD
 import net.ccbluex.liquidbounce.utils.block.PlaceInfo
 import kotlin.math.cos
 import kotlin.math.sin
@@ -27,7 +29,6 @@ data class Rotation(var yaw: Float, var pitch: Float) : MinecraftInstance() {
             return
 
         fixedSensitivity(mc.gameSettings.mouseSensitivity)
-
         player.rotationYaw = yaw
         player.rotationPitch = pitch
     }
@@ -38,8 +39,9 @@ data class Rotation(var yaw: Float, var pitch: Float) : MinecraftInstance() {
      * @see net.minecraft.client.renderer.EntityRenderer.updateCameraAndRender
      */
     fun fixedSensitivity(sensitivity: Float) {
-        val f = sensitivity * 0.6F + 0.2F
-        val gcd = f * f * f * 1.2F
+        val gcdmodule = LiquidBounce.moduleManager.getModule(GCD::class.java) as GCD
+        var f = sensitivity * 0.6F + 0.2F
+        val gcd = f * f * f * 1.2F / gcdmodule.gcdDividerValue.get()
 
         yaw -= yaw % gcd
         pitch -= pitch % gcd

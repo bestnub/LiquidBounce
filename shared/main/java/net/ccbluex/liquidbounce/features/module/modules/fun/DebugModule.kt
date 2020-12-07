@@ -7,27 +7,11 @@ import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.script.api.global.Chat
 import net.ccbluex.liquidbounce.value.BoolValue
-import net.ccbluex.liquidbounce.value.IntegerValue
 
 @ModuleInfo(name = "GCD", description = "Module for testing.", category = ModuleCategory.FUN)
-class GCD : Module() {
+class DebugModule : Module() {
     private var packetYaw = 0.0F
     private var packetPitch = 0.0F
-
-    val gcdDividerValue: IntegerValue = object : IntegerValue("gcdDivivder", 1, 1, 10) {
-        override fun onChanged(oldValue: Int, newValue: Int) {
-        }
-    }
-    val sensitivityDividerValue: IntegerValue = object : IntegerValue("sensitivityDivider", 1, 1, 10) {
-        override fun onChanged(oldValue: Int, newValue: Int) {
-        }
-    }
-
-    val enableRoundingValue: BoolValue = object : BoolValue("Rounding", false) {}
-    val roundingToValue: IntegerValue = object : IntegerValue("RoundingTo", 5, 0, 10) {
-        override fun onChanged(oldValue: Int, newValue: Int) {
-        }
-    }
 
     private val readRotationPacketsValue: BoolValue = object : BoolValue("ReadRotationPackets", false) {}
 
@@ -41,10 +25,11 @@ class GCD : Module() {
             val newPacketYaw = packetPlayer.yaw
             val newPacketPitch = packetPlayer.pitch
             if (newPacketYaw != packetYaw || newPacketPitch != packetPitch) {
-                Chat.print("Pitch: " + " Yaw: ")
+                Chat.print("Pitch: $newPacketPitch Yaw: $newPacketYaw")
                 packetPitch = newPacketPitch
                 packetYaw = newPacketYaw
             }
         }
     }
+
 }

@@ -12,6 +12,7 @@ import net.ccbluex.liquidbounce.api.minecraft.util.WVec3
 import net.ccbluex.liquidbounce.event.StrafeEvent
 import net.ccbluex.liquidbounce.features.module.modules.`fun`.GCD
 import net.ccbluex.liquidbounce.utils.block.PlaceInfo
+import java.math.RoundingMode
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
@@ -40,11 +41,17 @@ data class Rotation(var yaw: Float, var pitch: Float) : MinecraftInstance() {
      */
     fun fixedSensitivity(sensitivity: Float) {
         val gcdmodule = LiquidBounce.moduleManager.getModule(GCD::class.java) as GCD
-        var f = sensitivity * 0.6F + 0.2F
-        val gcd = f * f * f * 1.2F / gcdmodule.gcdDividerValue.get()
+        if (gcdmodule.state)
+            if (!gcdmodule.enableRoundingValue.get()) {
+                var f = sensitivity / gcdmodule.sensitivityDividerValue.get() * 0.6F + 0.2F
+                val gcd = f * f * f * 1.2F / gcdmodule.gcdDividerValue.get()
 
-        yaw -= yaw % gcd
-        pitch -= pitch % gcd
+                yaw -= yaw % gcd
+                pitch -= pitch % gcd
+            } else {
+                yaw = yaw.toBigDecimal().setScale(gcdmodule.roundingToValue.get(), RoundingMode.HALF_EVEN).toFloat()
+                pitch = pitch.toBigDecimal().setScale(gcdmodule.roundingToValue.get(), RoundingMode.HALF_EVEN).toFloat()
+            }
     }
 
     /**
@@ -55,8 +62,10 @@ data class Rotation(var yaw: Float, var pitch: Float) : MinecraftInstance() {
     fun applyStrafeToPlayer(event: StrafeEvent) {
         val player = mc.thePlayer!!
 
-        val dif = ((WMathHelper.wrapAngleTo180_float(player.rotationYaw - this.yaw
-                - 23.5f - 135)
+        val dif = ((WMathHelper.wrapAngleTo180_float(
+            player.rotationYaw - this.yaw
+                    - 23.5f - 135
+        )
                 + 180) / 45).toInt()
 
         val yaw = this.yaw

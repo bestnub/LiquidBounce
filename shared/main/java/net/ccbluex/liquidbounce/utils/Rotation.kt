@@ -49,8 +49,8 @@ data class Rotation(var yaw: Float, var pitch: Float) : MinecraftInstance() {
                 yaw -= yaw % gcd
                 pitch -= pitch % gcd
             } else {
-                yaw = yaw.toBigDecimal().setScale(gcdmodule.roundingToValue.get(), RoundingMode.HALF_EVEN).toFloat()
-                pitch = pitch.toBigDecimal().setScale(gcdmodule.roundingToValue.get(), RoundingMode.HALF_EVEN).toFloat()
+                yaw = yaw.toBigDecimal().setScale(gcdmodule.roundingToValue.get(), RoundingMode.HALF_DOWN).toFloat()
+                pitch = pitch.toBigDecimal().setScale(gcdmodule.roundingToValue.get(), RoundingMode.HALF_DOWN).toFloat()
             }
     }
 

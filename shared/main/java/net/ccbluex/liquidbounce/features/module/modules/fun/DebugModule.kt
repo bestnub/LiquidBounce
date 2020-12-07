@@ -8,7 +8,7 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.script.api.global.Chat
 import net.ccbluex.liquidbounce.value.BoolValue
 
-@ModuleInfo(name = "GCD", description = "Module for testing.", category = ModuleCategory.FUN)
+@ModuleInfo(name = "DebugModule", description = "DebugModule for testing.", category = ModuleCategory.FUN)
 class DebugModule : Module() {
     private var packetYaw = 0.0F
     private var packetPitch = 0.0F

@@ -3,117 +3,117 @@
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/CCBlueX/LiquidBounce/
  */
-package net.ccbluex.liquidbounce.features.module.modules.combat;
+package net.ccbluex.liquidbounce.features.module.modules.combat
 
-import net.ccbluex.liquidbounce.api.enums.WEnumHand;
-import net.ccbluex.liquidbounce.api.minecraft.item.IItemStack;
-import net.ccbluex.liquidbounce.event.EventTarget;
-import net.ccbluex.liquidbounce.event.Render3DEvent;
-import net.ccbluex.liquidbounce.features.module.Module;
-import net.ccbluex.liquidbounce.features.module.ModuleCategory;
-import net.ccbluex.liquidbounce.features.module.ModuleInfo;
-import net.ccbluex.liquidbounce.utils.CrossVersionUtilsKt;
-import net.ccbluex.liquidbounce.utils.InventoryUtils;
-import net.ccbluex.liquidbounce.utils.MovementUtils;
-import net.ccbluex.liquidbounce.utils.item.ArmorComparator;
-import net.ccbluex.liquidbounce.utils.item.ArmorPiece;
-import net.ccbluex.liquidbounce.utils.item.ItemUtils;
-import net.ccbluex.liquidbounce.utils.timer.TimeUtils;
-import net.ccbluex.liquidbounce.value.BoolValue;
-import net.ccbluex.liquidbounce.value.IntegerValue;
+import net.ccbluex.liquidbounce.api.enums.WEnumHand
+import net.ccbluex.liquidbounce.event.EventTarget
+import net.ccbluex.liquidbounce.event.Render3DEvent
+import net.ccbluex.liquidbounce.features.module.Module
+import net.ccbluex.liquidbounce.features.module.ModuleCategory
+import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.utils.CrossVersionUtils
+import net.ccbluex.liquidbounce.utils.CrossVersionUtils.createOpenInventoryPacket
+import net.ccbluex.liquidbounce.utils.InventoryUtils
+import net.ccbluex.liquidbounce.utils.MovementUtils
+import net.ccbluex.liquidbounce.utils.item.ArmorComparator
+import net.ccbluex.liquidbounce.utils.item.ArmorPiece
+import net.ccbluex.liquidbounce.utils.item.ItemUtils
+import net.ccbluex.liquidbounce.utils.timer.TimeUtils
+import net.ccbluex.liquidbounce.value.BoolValue
+import net.ccbluex.liquidbounce.value.IntegerValue
+import java.util.stream.Collectors
+import java.util.stream.IntStream
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static net.ccbluex.liquidbounce.utils.CrossVersionUtilsKt.createOpenInventoryPacket;
 
 @ModuleInfo(name = "AutoArmor", description = "Automatically equips the best armor in your inventory.", category = ModuleCategory.COMBAT)
-public class AutoArmor extends Module {
+class AutoArmor : Module() {
 
-    public static final ArmorComparator ARMOR_COMPARATOR = new ArmorComparator();
-    private final IntegerValue minDelayValue = new IntegerValue("MinDelay", 100, 0, 400) {
+    private val armorComparator = ArmorComparator()
+    private val minDelayValue: IntegerValue = object : IntegerValue("MinDelay", 100, 0, 400) {
 
-        @Override
-        protected void onChanged(final Integer oldValue, final Integer newValue) {
-            final int maxDelay = maxDelayValue.get();
+        override fun onChanged(oldValue: Int, newValue: Int) {
+            val maxDelay = maxDelayValue.get()
 
-            if (maxDelay < newValue) set(maxDelay);
+            if (maxDelay < newValue) set(maxDelay)
         }
-    };
-    private final IntegerValue maxDelayValue = new IntegerValue("MaxDelay", 200, 0, 400) {
-        @Override
-        protected void onChanged(final Integer oldValue, final Integer newValue) {
-            final int minDelay = minDelayValue.get();
+    }
+    private val maxDelayValue: IntegerValue = object : IntegerValue("MaxDelay", 200, 0, 400) {
+        override fun onChanged(oldValue: Int, newValue: Int) {
+            val minDelay = minDelayValue.get()
 
-            if (minDelay > newValue) set(minDelay);
+            if (minDelay > newValue) set(minDelay)
         }
-    };
-    private final BoolValue invOpenValue = new BoolValue("InvOpen", false);
-    private final BoolValue simulateInventory = new BoolValue("SimulateInventory", true);
-    private final BoolValue noMoveValue = new BoolValue("NoMove", false);
-    private final IntegerValue itemDelayValue = new IntegerValue("ItemDelay", 0, 0, 5000);
-    private final BoolValue hotbarValue = new BoolValue("Hotbar", true);
+    }
+    private val invOpenValue = BoolValue("InvOpen", false)
+    private val simulateInventory = BoolValue("SimulateInventory", true)
+    private val noMoveValue = BoolValue("NoMove", false)
+    private val itemDelayValue = IntegerValue("ItemDelay", 0, 0, 5000)
+    private val hotbarValue = BoolValue("Hotbar", true)
 
-    private long delay;
+    private var delay = 0L
 
-    private boolean locked = false;
+    private var locked: Boolean = false
 
     @EventTarget
-    public void onRender3D(final Render3DEvent event) {
-        if (!InventoryUtils.CLICK_TIMER.hasTimePassed(delay) || mc.getThePlayer() == null ||
-                (mc.getThePlayer().getOpenContainer() != null && mc.getThePlayer().getOpenContainer().getWindowId() != 0))
-            return;
+    fun onRender3D(event: Render3DEvent) {
+        if (!InventoryUtils.CLICK_TIMER.hasTimePassed(delay) || mc.thePlayer == null ||
+            (mc.thePlayer!!.openContainer != null && mc.thePlayer!!.openContainer!!.windowId != 0)
+        )
+            return
 
         // Find best armor
-        final Map<Integer, List<ArmorPiece>> armorPieces = IntStream.range(0, 36)
-                .filter(i -> {
-                    final IItemStack itemStack = mc.getThePlayer().getInventory().getStackInSlot(i);
+        val armorPieces = IntStream.range(0, 36)
+            .filter { i ->
+                val itemStack = mc.thePlayer!!.inventory.getStackInSlot(i)
 
-                    return itemStack != null && classProvider.isItemArmor(itemStack.getItem())
-                            && (i < 9 || System.currentTimeMillis() - itemStack.getItemDelay() >= itemDelayValue.get());
-                })
-                .mapToObj(i -> new ArmorPiece(mc.getThePlayer().getInventory().getStackInSlot(i), i))
-                .collect(Collectors.groupingBy(ArmorPiece::getArmorType));
+                return@filter (itemStack != null && classProvider.isItemArmor(itemStack.item)
+                        && (i < 9 || System.currentTimeMillis() - itemStack.itemDelay >= itemDelayValue.get()))
+            }
+            .mapToObj { i -> ArmorPiece(mc.thePlayer!!.inventory.getStackInSlot(i), i) }
+            .collect(Collectors.groupingBy(ArmorPiece::getArmorType))
 
-        final ArmorPiece[] bestArmor = new ArmorPiece[4];
+        val bestArmor = arrayOfNulls<ArmorPiece>(4)
 
-        for (final Map.Entry<Integer, List<ArmorPiece>> armorEntry : armorPieces.entrySet()) {
-            bestArmor[armorEntry.getKey()] = armorEntry.getValue().stream()
-                    .max(ARMOR_COMPARATOR).orElse(null);
+        for (armorEntry in armorPieces.entries) {
+            bestArmor[armorEntry.key] = armorEntry.value.stream()
+                .max(armorComparator).orElse(null)
         }
 
         // Swap armor
-        for (int i = 0; i < 4; i++) {
-            final ArmorPiece armorPiece = bestArmor[i];
+        for (i in 0..3) {
+            val armorPiece: ArmorPiece? = bestArmor[i]
 
             if (armorPiece == null)
-                continue;
+                continue
 
-            int armorSlot = 3 - i;
+            val armorSlot = 3 - i
 
-            final ArmorPiece oldArmor = new ArmorPiece(mc.getThePlayer().getInventory().armorItemInSlot(armorSlot), -1);
+            val oldArmor = ArmorPiece(mc.thePlayer!!.inventory.armorItemInSlot(armorSlot), -1)
 
-            if (ItemUtils.isStackEmpty(oldArmor.getItemStack()) || !classProvider.isItemArmor(oldArmor.getItemStack().getItem()) ||
-                    ARMOR_COMPARATOR.compare(oldArmor, armorPiece) < 0) {
-                if (!ItemUtils.isStackEmpty(oldArmor.getItemStack()) && move(8 - (3 - armorSlot), true)) {
-                    locked = true;
-                    return;
+            if (ItemUtils.isStackEmpty(oldArmor.itemStack) || !classProvider.isItemArmor(oldArmor.itemStack.item) ||
+                armorComparator.compare(oldArmor, armorPiece) < 0
+            ) {
+                if (!ItemUtils.isStackEmpty(oldArmor.itemStack) && move(8 - (3 - armorSlot), true)) {
+                    locked = true
+                    return
                 }
 
-                if (ItemUtils.isStackEmpty(mc.getThePlayer().getInventory().armorItemInSlot(armorSlot)) && move(armorPiece.getSlot(), false)) {
-                    locked = true;
-                    return;
+                if (ItemUtils.isStackEmpty(mc.thePlayer!!.inventory.armorItemInSlot(armorSlot)) && move(
+                        armorPiece.slot,
+                        false
+                    )
+                ) {
+                    locked = true
+                    return
                 }
             }
         }
 
-        locked = false;
+        locked = false
     }
 
-    public boolean isLocked() {
-        return !getState() || locked;
+    fun isLocked(): Boolean {
+        return !state || locked
     }
 
     /**
@@ -123,47 +123,59 @@ public class AutoArmor extends Module {
      * @param isArmorSlot
      * @return True if it is unable to move the item
      */
-    private boolean move(int item, boolean isArmorSlot) {
-        if (!isArmorSlot && item < 9 && hotbarValue.get() && !classProvider.isGuiInventory(mc.getCurrentScreen())) {
-            mc.getNetHandler().addToSendQueue(classProvider.createCPacketHeldItemChange(item));
-            mc.getNetHandler().addToSendQueue(CrossVersionUtilsKt.createUseItemPacket(mc.getThePlayer().getInventoryContainer().getSlot(item).getStack(), WEnumHand.MAIN_HAND));
-            mc.getNetHandler().addToSendQueue(classProvider.createCPacketHeldItemChange(mc.getThePlayer().getInventory().getCurrentItem()));
+    private fun move(item: Int, isArmorSlot: Boolean): Boolean {
+        if (!isArmorSlot && item < 9 && hotbarValue.get() && !classProvider.isGuiInventory(mc.currentScreen)) {
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(item))
+            mc.netHandler.addToSendQueue(
+                CrossVersionUtils.createUseItemPacket(
+                    mc.thePlayer!!.inventoryContainer.getSlot(
+                        item
+                    ).stack, WEnumHand.MAIN_HAND
+                )
+            )
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
 
-            delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get());
+            delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
 
-            return true;
-        } else if (!(noMoveValue.get() && MovementUtils.isMoving()) && (!invOpenValue.get() || classProvider.isGuiInventory(mc.getCurrentScreen())) && item != -1) {
-            final boolean openInventory = simulateInventory.get() && !classProvider.isGuiInventory(mc.getCurrentScreen());
+            return true
+        } else if (!(noMoveValue.get() && MovementUtils.isMoving) && (!invOpenValue.get() || classProvider.isGuiInventory(
+                mc.currentScreen
+            )) && item != -1
+        ) {
+            val openInventory: Boolean = simulateInventory.get() && !classProvider.isGuiInventory(mc.currentScreen)
 
             if (openInventory)
-                mc.getNetHandler().addToSendQueue(createOpenInventoryPacket());
+                mc.netHandler.addToSendQueue(createOpenInventoryPacket())
 
-            boolean full = isArmorSlot;
+            var full = isArmorSlot
 
             if (full) {
-                for (IItemStack iItemStack : mc.getThePlayer().getInventory().getMainInventory()) {
+                for (iItemStack in mc.thePlayer!!.inventory.mainInventory) {
                     if (ItemUtils.isStackEmpty(iItemStack)) {
-                        full = false;
-                        break;
+                        full = false
+                        break
                     }
                 }
             }
 
             if (full) {
-                mc.getPlayerController().windowClick(mc.getThePlayer().getInventoryContainer().getWindowId(), item, 1, 4, mc.getThePlayer());
+                mc.playerController.windowClick(mc.thePlayer!!.inventoryContainer.windowId, item, 1, 4, mc.thePlayer!!)
             } else {
-                mc.getPlayerController().windowClick(mc.getThePlayer().getInventoryContainer().getWindowId(), (isArmorSlot ? item : (item < 9 ? item + 36 : item)), 0, 1, mc.getThePlayer());
+                mc.playerController.windowClick(
+                    mc.thePlayer!!.inventoryContainer.windowId,
+                    (if (isArmorSlot) item else (if (item < 9) item + 36 else item)),
+                    0,
+                    1,
+                    mc.thePlayer!!
+                )
             }
 
-            delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get());
-
+            delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
             if (openInventory)
-                mc.getNetHandler().addToSendQueue(classProvider.createCPacketCloseWindow());
+                mc.netHandler.addToSendQueue(classProvider.createCPacketCloseWindow())
 
-            return true;
+            return true
         }
-
-        return false;
+        return false
     }
-
 }

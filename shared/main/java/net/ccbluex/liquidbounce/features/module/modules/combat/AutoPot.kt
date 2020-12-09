@@ -15,6 +15,8 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.*
+import net.ccbluex.liquidbounce.utils.CrossVersionUtils.createOpenInventoryPacket
+import net.ccbluex.liquidbounce.utils.CrossVersionUtils.createUseItemPacket
 import net.ccbluex.liquidbounce.utils.misc.FallingPlayer
 import net.ccbluex.liquidbounce.utils.misc.RandomUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer

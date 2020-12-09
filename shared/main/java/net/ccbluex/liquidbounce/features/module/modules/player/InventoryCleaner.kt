@@ -19,7 +19,8 @@ import net.ccbluex.liquidbounce.features.module.modules.combat.AutoArmor
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.ccbluex.liquidbounce.utils.InventoryUtils
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.utils.createOpenInventoryPacket
+import net.ccbluex.liquidbounce.utils.CrossVersionUtils.createOpenInventoryPacket
+import net.ccbluex.liquidbounce.utils.item.ArmorComparator
 import net.ccbluex.liquidbounce.utils.item.ArmorPiece
 import net.ccbluex.liquidbounce.utils.item.ItemUtils
 import net.ccbluex.liquidbounce.utils.timer.TimeUtils
@@ -83,7 +84,7 @@ class InventoryCleaner : Module() {
                 !classProvider.isGuiInventory(mc.currentScreen) && invOpenValue.get() ||
                 noMoveValue.get() && MovementUtils.isMoving ||
                 thePlayer.openContainer != null && thePlayer.openContainer!!.windowId != 0
-                || (LiquidBounce.moduleManager[AutoArmor::class.java] as AutoArmor).isLocked)
+                || (LiquidBounce.moduleManager[AutoArmor::class.java] as AutoArmor).isLocked())
             return
 
         if (sortValue.get())
@@ -159,7 +160,6 @@ class InventoryCleaner : Module() {
                 }
             } else if (classProvider.isItemArmor(item)) {
                 val currArmor = ArmorPiece(itemStack, slot)
-
                 items().none { (slot, stack) ->
                     if (stack != itemStack && classProvider.isItemArmor(stack.item)) {
                         val armor = ArmorPiece(stack, slot)

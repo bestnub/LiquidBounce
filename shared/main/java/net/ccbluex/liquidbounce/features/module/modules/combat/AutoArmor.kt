@@ -28,7 +28,7 @@ import java.util.stream.IntStream
 @ModuleInfo(name = "AutoArmor", description = "Automatically equips the best armor in your inventory.", category = ModuleCategory.COMBAT)
 class AutoArmor : Module() {
 
-    private val armorComparator = ArmorComparator()
+    private val ARMOR_COMPARATOR = ArmorComparator()
     private val minDelayValue: IntegerValue = object : IntegerValue("MinDelay", 100, 0, 400) {
 
         override fun onChanged(oldValue: Int, newValue: Int) {
@@ -76,7 +76,7 @@ class AutoArmor : Module() {
 
         for (armorEntry in armorPieces.entries) {
             bestArmor[armorEntry.key] = armorEntry.value.stream()
-                .max(armorComparator).orElse(null)
+                .max(ARMOR_COMPARATOR).orElse(null)
         }
 
         // Swap armor
@@ -91,7 +91,7 @@ class AutoArmor : Module() {
             val oldArmor = ArmorPiece(mc.thePlayer!!.inventory.armorItemInSlot(armorSlot), -1)
 
             if (ItemUtils.isStackEmpty(oldArmor.itemStack) || !classProvider.isItemArmor(oldArmor.itemStack.item) ||
-                armorComparator.compare(oldArmor, armorPiece) < 0
+                ARMOR_COMPARATOR.compare(oldArmor, armorPiece) < 0
             ) {
                 if (!ItemUtils.isStackEmpty(oldArmor.itemStack) && move(8 - (3 - armorSlot), true)) {
                     locked = true

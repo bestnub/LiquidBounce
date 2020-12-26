@@ -388,11 +388,9 @@ class Scaffold : Module() {
     fun onPacket(event: PacketEvent) {
         if (mc.thePlayer == null) return
         val packet: IPacket = event.packet
-        if(modeValue.get().equals("Spoof", ignoreCase = true)) {
-            if (classProvider.isCPacketHeldItemChange(packet)) {
-                val packetHeldItemChange: ICPacketHeldItemChange = packet.asCPacketHeldItemChange()
-                slot = packetHeldItemChange.slotId
-            }
+        if (classProvider.isCPacketHeldItemChange(packet)) {
+            val packetHeldItemChange: ICPacketHeldItemChange = packet.asCPacketHeldItemChange()
+            slot = packetHeldItemChange.slotId
         }
     }
 
@@ -482,11 +480,12 @@ class Scaffold : Module() {
                 return
 
             if (autoBlockValue.get().equals("Spoof", true)) {
-                if (blockSlot - 36 != slot)
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-            } else {
-                mc.thePlayer!!.inventory.currentItem = blockSlot - 36
-                mc.playerController.updateController()
+
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+            }
+            if(autoBlockValue.get().equals("Switch", true)) {
+
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }

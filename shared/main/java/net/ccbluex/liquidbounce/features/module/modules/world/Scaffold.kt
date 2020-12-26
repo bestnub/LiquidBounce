@@ -480,12 +480,13 @@ class Scaffold : Module() {
                 return
 
             if (autoBlockValue.get().equals("Spoof", true)) {
-
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                if(blockSlot >= 0) {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+                }
             }
             if(autoBlockValue.get().equals("Switch", true)) {
 
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36));
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }

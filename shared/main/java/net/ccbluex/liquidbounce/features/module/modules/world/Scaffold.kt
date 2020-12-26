@@ -481,8 +481,8 @@ class Scaffold : Module() {
 
             if (autoBlockValue.get().equals("Spoof", true)) {
                 if(blockSlot >= 0) {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36));
+                    mc.thePlayer!!.inventory.currentItem = mc.thePlayer!!.inventory.currentItem
                 }
             }
             if(autoBlockValue.get().equals("Switch", true)) {

@@ -64,7 +64,7 @@ class Scaffold : Module() {
     private val placeableDelay = BoolValue("PlaceableDelay", true)
 
     // Autoblock
-    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Spoof", "Switch"), "Spoof")
+    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Lite-Spoof", "Spoof", "Switch"), "Spoof")
 
     // Basic stuff
     @JvmField
@@ -195,11 +195,6 @@ class Scaffold : Module() {
     override fun onEnable() {
         if (mc.thePlayer == null) return
         launchY = mc.thePlayer!!.posY.toInt()
-        val blockSlot = InventoryUtils.findAutoBlockBlock()
-        if (autoBlockValue.get().equals("Spoof", true)) {
-            if (blockSlot - 36 != slot)
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-        }
 
         oldslot = mc.thePlayer!!.inventory.currentItem
     }
@@ -476,18 +471,29 @@ class Scaffold : Module() {
         var itemStack: IItemStack? = mc.thePlayer!!.heldItem
         if (itemStack == null || !classProvider.isItemBlock(itemStack.item) ||
             classProvider.isBlockBush(itemStack.item!!.asItemBlock().block) || mc.thePlayer!!.heldItem!!.stackSize <= 0) {
-            if (autoBlockValue.get().equals("Off", true))
-                return
 
             val blockSlot = InventoryUtils.findAutoBlockBlock()
 
             if (blockSlot == -1)
                 return
-
-            if(autoBlockValue.get().equals("Switch", true))
-            {
-                mc.thePlayer!!.inventory.currentItem = blockSlot - 36
-                mc.playerController.updateController()
+            when(autoBlockValue.get().toLowerCase()) {
+                "Off" -> {
+                    return
+                }
+                "Lite-Spoof" -> {
+                    if(blockSlot >= 0) {
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    }
+                }
+                "Spoof" -> {
+                    if (blockSlot - 36 != slot) {
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    }
+                }
+                "Switch" -> {
+                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                    mc.playerController.updateController()
+                }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }

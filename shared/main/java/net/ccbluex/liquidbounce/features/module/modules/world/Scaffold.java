@@ -356,9 +356,6 @@ public class Scaffold extends Module {
                 mc.getNetHandler().addToSendQueue(classProvider.createCPacketAnimation());
         }
 
-        if (!stayAutoBlock.get() && blockSlot >= 0)
-            mc.getNetHandler().addToSendQueue(classProvider.createCPacketHeldItemChange(mc.getThePlayer().getInventory().getCurrentItem()));
-
         // Reset
         this.targetPlace = null;
     }

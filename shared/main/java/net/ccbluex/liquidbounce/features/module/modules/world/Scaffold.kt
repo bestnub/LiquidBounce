@@ -65,7 +65,7 @@ class Scaffold : Module() {
 
     // Autoblock
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Lite-Spoof", "Spoof", "Switch"), "Spoof")
-    private val test1 = BoolValue("helditem", false)
+    private val test1 = BoolValue("heldite2m", false)
 
     // Basic stuff
     @JvmField
@@ -482,11 +482,11 @@ class Scaffold : Module() {
             if (autoBlockValue.get().equals("Lite-Spoof", ignoreCase = true)) {
                 if(!test1.get()) {
                     mc.thePlayer!!.inventory.currentItem = mc.thePlayer!!.inventory.currentItem
-                    mc.playerController.updateController()
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                 } else {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    if(blockSlot >= 0) {
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+                    }
                 }
             }
             if (autoBlockValue.get().equals("Spoof", ignoreCase = true)) {

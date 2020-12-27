@@ -483,6 +483,7 @@ class Scaffold : Module() {
                 if(!test1.get()) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                     mc.thePlayer!!.inventory.currentItem = mc.thePlayer!!.inventory.currentItem
+                    mc.playerController.updateController()
                 } else {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
                     mc.thePlayer!!.inventory.currentItem = blockSlot - 36

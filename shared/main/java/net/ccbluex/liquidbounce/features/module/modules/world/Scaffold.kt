@@ -65,6 +65,7 @@ class Scaffold : Module() {
 
     // Autoblock
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Lite-Spoof", "Spoof", "Switch"), "Spoof")
+    private val test1 = BoolValue("helditem", false)
 
     // Basic stuff
     @JvmField
@@ -479,8 +480,10 @@ class Scaffold : Module() {
             if (autoBlockValue.get().equals("Off", ignoreCase = true))
                 return
             if (autoBlockValue.get().equals("Lite-Spoof", ignoreCase = true)) {
-                if (blockSlot >= 0) {
+                if(!test1.get()) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                } else {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
                 }
             }
             if (autoBlockValue.get().equals("Spoof", ignoreCase = true)) {

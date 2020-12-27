@@ -517,6 +517,7 @@ class Scaffold : Module() {
                         return
         }
     }
+    val blockSlot = -1
 
     fun place() {
         if (targetPlace == null) {
@@ -546,13 +547,6 @@ class Scaffold : Module() {
                 mc.thePlayer!!.inventory.currentItem = blockSlot - 36
                 mc.playerController.updateController()
             }
-            if(autoBlockValue.get().equals("Lite-Spoof", ignoreCase = true) && blockSlot >= 0) {
-                if(!test1.get()) {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-                } else {
-                    mc.thePlayer!!.inventory.currentItem = mc.thePlayer!!.inventory.currentItem
-                }
-            }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }
         if (mc.playerController.onPlayerRightClick(mc.thePlayer!!, mc.theWorld!!, itemStack, targetPlace!!.blockPos, targetPlace!!.enumFacing, targetPlace!!.vec3)) {
@@ -569,6 +563,13 @@ class Scaffold : Module() {
                 mc.thePlayer!!.swingItem()
             } else {
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
+            }
+        }
+        if(autoBlockValue.get().equals("Lite-Spoof", ignoreCase = true) && blockSlot >= 0) {
+            if(!test1.get()) {
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+            } else {
+                mc.thePlayer!!.inventory.currentItem = mc.thePlayer!!.inventory.currentItem
             }
         }
         targetPlace = null

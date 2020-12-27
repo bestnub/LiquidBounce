@@ -567,9 +567,9 @@ class Scaffold : Module() {
         }
         if(autoBlockValue.get().equals("Lite-Spoof", ignoreCase = true) && blockSlot >= 0) {
             if(!test1.get()) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
             } else {
-                mc.thePlayer!!.inventory.currentItem = mc.thePlayer!!.inventory.currentItem
+                mc.thePlayer!!.inventory.currentItem = oldslot
             }
         }
         targetPlace = null

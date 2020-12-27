@@ -476,24 +476,21 @@ class Scaffold : Module() {
 
             if (blockSlot == -1)
                 return
-            when(autoBlockValue.get().toLowerCase()) {
-                "Off" -> {
-                    return
+            if (autoBlockValue.get().equals("Off", ignoreCase = true))
+                return
+            if (autoBlockValue.get().equals("Lite-Spoof", ignoreCase = true)) {
+                if (blockSlot >= 0) {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                 }
-                "Lite-Spoof" -> {
-                    if(blockSlot >= 0) {
-                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-                    }
+            }
+            if (autoBlockValue.get().equals("Spoof", ignoreCase = true)) {
+                if (blockSlot - 36 != slot) {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                 }
-                "Spoof" -> {
-                    if (blockSlot - 36 != slot) {
-                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-                    }
-                }
-                "Switch" -> {
-                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
-                    mc.playerController.updateController()
-                }
+            }
+            if (autoBlockValue.get().equals("Switch", ignoreCase = true)) {
+                mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                mc.playerController.updateController()
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }

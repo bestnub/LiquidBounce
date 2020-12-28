@@ -101,6 +101,9 @@ class KillAura : Module() {
     // Bypass
     private val aacValue = BoolValue("AAC", false)
 
+    // Switch Delay
+    private val switchdelayValue = IntegerValue("SwitchDelay", 300, 1, 2000)
+
     // Turn Speed
     private val maxTurnSpeed: FloatValue = object : FloatValue("MaxTurnSpeed", 180f, 0f, 180f) {
         override fun onChanged(oldValue: Float, newValue: Float) {
@@ -420,6 +423,14 @@ class KillAura : Module() {
 
             if (target == currentTarget)
                 target = null
+        }
+        if(targetModeValue.get().equals("Switch", ignoreCase = true)) {
+            if (attackTimer.hasTimePassed((switchdelayValue.get() * 1).toLong())) {
+                if (switchdelayValue.get() != 0) {
+                    prevTargetEntities.add(if (aacValue.get()) target!!.entityId else currentTarget!!.entityId)
+                    attackTimer.reset()
+                }
+            }
         }
 
         // Open inventory

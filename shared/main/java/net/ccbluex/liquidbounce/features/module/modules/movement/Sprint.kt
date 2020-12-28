@@ -20,11 +20,15 @@ import net.ccbluex.liquidbounce.value.BoolValue
 @ModuleInfo(name = "Sprint", description = "Automatically sprints all the time.", category = ModuleCategory.MOVEMENT)
 class Sprint : Module() {
 
-@JvmField
+    @JvmField
     val allDirectionsValue = BoolValue("AllDirections", true)
+    @JvmField
     val blindnessValue = BoolValue("Blindness", true)
+    @JvmField
     val foodValue = BoolValue("Food", true)
+    @JvmField
     val checkServerSide = BoolValue("CheckServerSide", false)
+    @JvmField
     val checkServerSideGround = BoolValue("CheckServerSideOnlyGround", false)
 
     @EventTarget

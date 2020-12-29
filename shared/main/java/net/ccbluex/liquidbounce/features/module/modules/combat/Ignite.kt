@@ -26,6 +26,7 @@ import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.block.BlockUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.ccbluex.liquidbounce.value.BoolValue
+import net.ccbluex.liquidbounce.value.ListValue
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -33,6 +34,7 @@ import kotlin.math.sqrt
 class Ignite: Module() {
     private val lighterValue = BoolValue("Lighter", true)
     private val lavaBucketValue = BoolValue("Lava", true)
+    private val modeValue = ListValue("Mode", arrayOf("Normal", "Switch"), "Normal")
     private val msTimer = MSTimer()
 
     @EventTarget
@@ -49,7 +51,7 @@ class Ignite: Module() {
         val lighterInHotbar =
             if(lighterValue.get()) InventoryUtils.findItem(36, 45, classProvider.getItemEnum(ItemType.FLINT_AND_STEEL)) else -1
         val lavaInHotbar =
-            if(lavaBucketValue.get()) InventoryUtils.findItem(26, 45, classProvider.getItemEnum(ItemType.LAVA_BUCKET)) else -1
+            if(lavaBucketValue.get()) InventoryUtils.findItem(36, 45, classProvider.getItemEnum(ItemType.LAVA_BUCKET)) else -1
 
         if (lighterInHotbar == -1 && lavaInHotbar == -1)
             return
@@ -67,7 +69,14 @@ class Ignite: Module() {
 
                 RotationUtils.keepCurrentRotation = true
 
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(fireInHotbar - 36))
+                if(modeValue.get().equals("Normal", ignoreCase = true)) {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(fireInHotbar - 36))
+                }
+
+                if(modeValue.get().equals("Switch", ignoreCase = true)) {
+                    thePlayer.inventory.currentItem = fireInHotbar - 36
+                    mc.playerController.updateController()
+                }
 
                 val itemStack: IItemStack? = mc.thePlayer!!.inventory.getStackInSlot(fireInHotbar)
 

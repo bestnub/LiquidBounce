@@ -1,4 +1,4 @@
-package net.ccbluex.liquidbounce.features.module.modules.player
+package net.ccbluex.liquidbounce.features.module.modules.combat
 
 import net.ccbluex.liquidbounce.api.enums.WEnumHand
 import net.ccbluex.liquidbounce.event.EventTarget

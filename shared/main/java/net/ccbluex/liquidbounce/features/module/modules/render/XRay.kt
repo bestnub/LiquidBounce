@@ -6,7 +6,6 @@
 package net.ccbluex.liquidbounce.features.module.modules.render
 
 import net.ccbluex.liquidbounce.api.enums.BlockType
-import net.ccbluex.liquidbounce.api.minecraft.client.block.IBlock
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
@@ -14,7 +13,7 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 @ModuleInfo(name = "XRay", description = "Allows you to see ores through walls.", category = ModuleCategory.RENDER)
 class XRay : Module() {
 
-    val xrayBlocks = mutableListOf<IBlock>(
+        val xrayBlocks = mutableListOf(
             classProvider.getBlockEnum(BlockType.COAL_ORE),
             classProvider.getBlockEnum(BlockType.IRON_ORE),
             classProvider.getBlockEnum(BlockType.GOLD_ORE),

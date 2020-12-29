@@ -83,7 +83,7 @@ class InventoryCleaner : Module() {
                 !classProvider.isGuiInventory(mc.currentScreen) && invOpenValue.get() ||
                 noMoveValue.get() && MovementUtils.isMoving ||
                 thePlayer.openContainer != null && thePlayer.openContainer!!.windowId != 0
-                || (LiquidBounce.moduleManager[AutoArmor::class.java] as AutoArmor).isLocked)
+                || (LiquidBounce.moduleManager[AutoArmor::class.java] as AutoArmor).isDone)
             return
 
         if (sortValue.get())
@@ -167,7 +167,7 @@ class InventoryCleaner : Module() {
                         if (armor.armorType != currArmor.armorType)
                             false
                         else
-                            AutoArmor.ARMOR_COMPARATOR.compare(currArmor, armor) <= 0
+                            AutoArmor().ARMOR_COMPARATOR.compare(currArmor, armor) <= 0
                     } else
                         false
                 }

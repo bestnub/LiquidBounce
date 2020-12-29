@@ -145,6 +145,7 @@ class ModuleManager : Listenable {
                 CameraClip::class.java,
                 WaterSpeed::class.java,
                 Ignite::class.java,
+                MatrixV::class.java,
                 SlimeJump::class.java,
                 MoreCarry::class.java,
                 NoPitchLimit::class.java,

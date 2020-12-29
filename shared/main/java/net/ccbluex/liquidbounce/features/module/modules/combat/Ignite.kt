@@ -11,6 +11,7 @@ import net.ccbluex.liquidbounce.api.minecraft.client.entity.IEntity
 import net.ccbluex.liquidbounce.api.minecraft.client.entity.IEntityPlayerSP
 import net.ccbluex.liquidbounce.api.minecraft.client.multiplayer.IWorldClient
 import net.ccbluex.liquidbounce.api.minecraft.item.IItemStack
+import net.ccbluex.liquidbounce.api.minecraft.network.play.client.ICPacketEntityAction
 import net.ccbluex.liquidbounce.api.minecraft.util.IEnumFacing
 import net.ccbluex.liquidbounce.api.minecraft.util.WBlockPos
 import net.ccbluex.liquidbounce.api.minecraft.util.WMathHelper

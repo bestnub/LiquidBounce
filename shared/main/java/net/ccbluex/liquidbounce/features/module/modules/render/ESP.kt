@@ -80,7 +80,7 @@ class ESP : Module() {
         }
         //</editor-fold>
         for (entity in mc.theWorld!!.loadedEntityList) {
-            if (!classProvider.isEntityLivingBase(entity) || !botValue.get() && AntiBot.isBot(entity.asEntityLivingBase())) continue
+            if (AntiBot.isBot(entity.asEntityLivingBase()) && !botValue.get()) continue
             if (entity != mc.thePlayer && EntityUtils.isSelected(entity, false)) {
                 val entityLiving = entity.asEntityLivingBase()
                 val color = getColor(entityLiving)

@@ -73,19 +73,17 @@ class Ignite: Module() {
 
                 if (classProvider.isItemBucket(itemStack!!.item)) {
                     val diffX: Double = blockPos.x + 0.5 - mc.thePlayer!!.posX
-                    val diffY: Double = blockPos.y + 0.5 -
-                            (thePlayer.entityBoundingBox.minY +
-                                    thePlayer.eyeHeight)
+                    val diffY: Double = blockPos.y + 0.5 - (thePlayer.entityBoundingBox.minY + thePlayer.eyeHeight)
                     val diffZ: Double = blockPos.z + 0.5 - thePlayer.posZ
                     val sqrt: Double = sqrt(diffX * diffX + diffZ * diffZ)
-                    val yaw: Double = (atan2(diffZ, diffX) * 180.0 / Math.PI) - 90F
-                    val pitch: Double = -(atan2(diffY, sqrt) * 180.0 / Math.PI)
+                    val yaw: Float = ((atan2(diffZ, diffX) * 180.0 / Math.PI) - 90F).toFloat()
+                    val pitch: Float = (-(atan2(diffY, sqrt) * 180.0 / Math.PI)).toFloat()
 
                     mc.netHandler.addToSendQueue(classProvider.createCPacketPlayerLook(
                         thePlayer.rotationYaw +
-                                WMathHelper.wrapAngleTo180_float((yaw - thePlayer.rotationYaw).toFloat()),
+                                WMathHelper.wrapAngleTo180_float((yaw - thePlayer.rotationYaw)),
                         thePlayer.rotationPitch +
-                                WMathHelper.wrapAngleTo180_float((pitch - thePlayer.rotationPitch).toFloat()),
+                                WMathHelper.wrapAngleTo180_float((pitch - thePlayer.rotationPitch)),
                         thePlayer.onGround))
 
                     mc.playerController.sendUseItem(thePlayer, theWorld, itemStack)

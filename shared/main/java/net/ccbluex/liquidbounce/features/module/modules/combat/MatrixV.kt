@@ -10,29 +10,21 @@ import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 
 @ModuleInfo(
-    name = "MatrixV",
-    description = "Automatically goes lower lower lower baby!",
+    name = "YAWPITCH",
+    description = "Automatically sets your yaw/pitch.I.",
     category = ModuleCategory.COMBAT
 )
-class MatrixV: Module() {
+class YawPitch: Module() {
 
     private val allowValue = BoolValue("Allow?", false)
-    private val lowerValue = BoolValue("Lower?", false)
-    private val sameValue = BoolValue("SameY?", false)
-    private val lowValue = FloatValue("LowValue!!", 1.0F, 0.0F, 10.0F)
+    private val pitchValue = FloatValue("Pitchsir", 83.2F, 0.0F, 90F)
+    private val yawValue = FloatValue("Yawsir", 0.0F, 0.0F, 90F)
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if(allowValue.get()) {
-            if(lowerValue.get()) {
-                if(sameValue.get()) {
-                    mc.thePlayer!!.setPosition(mc.thePlayer!!.posX, mc.thePlayer!!.posY + lowValue.get(), mc.thePlayer!!.posZ)
-                    ClientUtils.displayChatMessage("posY NOW! &4${mc.thePlayer!!.posY}")
-                } else {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketPlayerPosition(mc.thePlayer!!.posX, lowValue.get().toDouble(), mc.thePlayer!!.posZ, true))
-                    ClientUtils.displayChatMessage("posY NOW! &7${mc.thePlayer!!.posY}")
-                }
-            }
-        } else return
+            mc.thePlayer!!.rotationPitch = pitchValue.get()
+            mc.thePlayer!!.rotationYaw = yawValue.get()
+        }
     }
 }

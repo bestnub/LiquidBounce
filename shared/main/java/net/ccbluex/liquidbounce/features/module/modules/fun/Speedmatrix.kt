@@ -23,6 +23,7 @@ class Speedmatrix: Module() {
     private val timerValue = FloatValue("Timer", 1F, 0.1F, 2F)
     private val speedAir2 = FloatValue("SpeedInAir2", 0.02F, 0.00F, 1F)
     private val timerValue2 = FloatValue("Timer2", 1F, 0.1F, 2F)
+    private val motionY = FloatValue("MotionY", 0.42f, 0.00f, 1f)
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
@@ -47,5 +48,6 @@ class Speedmatrix: Module() {
     override fun onDisable() {
         mc.timer.timerSpeed = 1f
         mc.thePlayer!!.speedInAir = 0.02f
+        mc.thePlayer!!.motionY = 0.42
     }
 }

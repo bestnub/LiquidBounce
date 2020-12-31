@@ -11,6 +11,7 @@ import net.ccbluex.liquidbounce.event.KeyEvent
 import net.ccbluex.liquidbounce.event.Listenable
 import net.ccbluex.liquidbounce.features.module.modules.`fun`.Derp
 import net.ccbluex.liquidbounce.features.module.modules.`fun`.SkinDerp
+import net.ccbluex.liquidbounce.features.module.modules.`fun`.Speedmatrix
 import net.ccbluex.liquidbounce.features.module.modules.combat.*
 import net.ccbluex.liquidbounce.features.module.modules.exploit.*
 import net.ccbluex.liquidbounce.features.module.modules.misc.*
@@ -66,6 +67,7 @@ class ModuleManager : Listenable {
                 Scaffold::class.java,
                 CivBreak::class.java,
                 Tower::class.java,
+                Speedmatrix::class.java,
                 FastBreak::class.java,
                 FastPlace::class.java,
                 ESP::class.java,

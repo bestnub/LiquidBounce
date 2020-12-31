@@ -34,6 +34,7 @@ class Speedmatrix: Module() {
                 }
             } else {
                 if(MovementUtils.isMoving) {
+                    mc.thePlayer!!.sprinting = true
                     mc.thePlayer!!.jump()
                     mc.thePlayer!!.speedInAir = speedAir2.get()
                     mc.timer.timerSpeed = timerValue2.get()

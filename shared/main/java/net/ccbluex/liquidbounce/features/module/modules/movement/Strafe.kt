@@ -60,7 +60,7 @@ class Strafe : Module() {
         val speed = (shotSpeed * strengthValue.get())
         val motionX = (mc.thePlayer!!.motionX * (1 - strengthValue.get()))
         val motionZ = (mc.thePlayer!!.motionZ * (1 - strengthValue.get()))
-        if (!(mc.thePlayer!!.movementInput.moveForward == 0F || mc.thePlayer!!.movementInput.moveStrafe == 0F)) {
+        if (!(mc.thePlayer!!.movementInput.moveForward != 0F || mc.thePlayer!!.movementInput.moveStrafe != 0F)) {
             if (noMoveStopValue.get()) {
                 mc.thePlayer!!.motionX = 0.0
                 mc.thePlayer!!.motionZ = 0.0

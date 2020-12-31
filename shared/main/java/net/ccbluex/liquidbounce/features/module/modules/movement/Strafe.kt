@@ -35,7 +35,7 @@ class Strafe : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if (mc.thePlayer!!.onGround && mc.gameSettings.keyBindJump.isKeyDown && allDirectionsJumpValue.get() && (mc.thePlayer!!.movementInput.moveForward == 0F || mc.thePlayer!!.movementInput.moveStrafe == 0F) && !(mc.thePlayer!!.isInWater || mc.thePlayer!!.isInLava || mc.thePlayer!!.isOnLadder || mc.thePlayer!!.isInWeb)) {
+        if (mc.thePlayer!!.onGround && mc.gameSettings.keyBindJump.isKeyDown && allDirectionsJumpValue.get() && (mc.thePlayer!!.movementInput.moveForward != 0F || mc.thePlayer!!.movementInput.moveStrafe != 0F) && !(mc.thePlayer!!.isInWater || mc.thePlayer!!.isInLava || mc.thePlayer!!.isOnLadder || mc.thePlayer!!.isInWeb)) {
             if (mc.gameSettings.keyBindJump.isKeyDown) {
                 mc.gameSettings.keyBindJump.pressed = false
                 wasDown = true

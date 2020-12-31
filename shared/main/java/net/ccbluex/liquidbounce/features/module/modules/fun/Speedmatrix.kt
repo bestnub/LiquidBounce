@@ -3,9 +3,17 @@ package net.ccbluex.liquidbounce.features.module.modules.`fun`
 import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
+import net.ccbluex.liquidbounce.features.module.ModuleCategory
+import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 
+
+@ModuleInfo(
+    name = "Speedboi",
+    description = "Automatically fucks matrix!.!",
+    category = ModuleCategory.FUN
+)
 class Speedmatrix: Module() {
 
     private val allowValue = BoolValue("Allow", false)

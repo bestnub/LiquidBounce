@@ -5,6 +5,7 @@ import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 
@@ -27,15 +28,21 @@ class Speedmatrix: Module() {
     fun onUpdate(event: UpdateEvent) {
         if(allowValue.get()) {
             if(!mc.thePlayer!!.onGround) {
-                if(mc.thePlayer!!.fallDistance == fallValue.get()) {
+                if(mc.thePlayer!!.fallDistance > fallValue.get()) {
                     mc.thePlayer!!.speedInAir = speedAir.get()
                     mc.timer.timerSpeed = timerValue.get()
                 }
             } else {
-                mc.thePlayer!!.jump()
-                mc.thePlayer!!.speedInAir = speedAir2.get()
-                mc.timer.timerSpeed = timerValue2.get()
+                if(MovementUtils.isMoving) {
+                    mc.thePlayer!!.jump()
+                    mc.thePlayer!!.speedInAir = speedAir2.get()
+                    mc.timer.timerSpeed = timerValue2.get()
+                }
             }
         } else return
+    }
+    override fun onDisable() {
+        mc.timer.timerSpeed = 1f
+        mc.thePlayer!!.speedInAir = 0.02f
     }
 }

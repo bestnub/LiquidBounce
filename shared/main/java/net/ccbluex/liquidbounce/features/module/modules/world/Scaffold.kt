@@ -530,22 +530,27 @@ class Scaffold : Module() {
 
         var itemStack: IItemStack? = mc.thePlayer!!.heldItem
         if (itemStack == null || !classProvider.isItemBlock(itemStack.item) || classProvider.isBlockBush(itemStack.item!!.asItemBlock().block) || mc.thePlayer!!.heldItem!!.stackSize <= 0) {
-            if (autoBlockValue.get().equals("Off", true))
-                return
 
             val blockSlot = InventoryUtils.findAutoBlockBlock()
 
             if (blockSlot == -1)
                 return
-            if (autoBlockValue.get().equals("Lite-Spoof", true)) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-            }
-            if (autoBlockValue.get().equals("Spoof", true)) {
-                if (blockSlot - 36 != slot)
+
+            when(autoBlockValue.get().toLowerCase()) {
+                "Off" -> {
+                    return
+                }
+                "Lite-Spoof" -> {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-            } else {
-                mc.thePlayer!!.inventory.currentItem = blockSlot - 36
-                mc.playerController.updateController()
+                }
+                "Spoof" -> {
+                    if (blockSlot - 36 != slot)
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                }
+                "Switch" -> {
+                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                    mc.playerController.updateController()
+                }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }
@@ -566,7 +571,7 @@ class Scaffold : Module() {
             }
         }
         if(!test1.get() && blockSlot >= 0) {
-            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
         }
         targetPlace = null
     }

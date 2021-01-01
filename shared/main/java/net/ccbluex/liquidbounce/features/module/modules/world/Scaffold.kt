@@ -541,7 +541,7 @@ class Scaffold : Module() {
                     return
                 }
                 "Lite-Spoof" -> {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
                 }
                 "Spoof" -> {
                     if (blockSlot - 36 != slot)
@@ -571,7 +571,7 @@ class Scaffold : Module() {
             }
         }
         if(!test1.get() && blockSlot >= 0) {
-            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
         }
         targetPlace = null
     }

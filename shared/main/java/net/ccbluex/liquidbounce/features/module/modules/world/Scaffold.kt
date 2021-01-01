@@ -541,9 +541,15 @@ class Scaffold : Module() {
                     return
                 }
                 "Server-Spoof" -> {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
-                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
-                    mc.playerController.updateController()
+                    if(test1.get()) {
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
+                        mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                        mc.playerController.updateController()
+                    } else {
+                        mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                        mc.playerController.updateController()
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
+                    }
                 }
                 "Spoof" -> {
                     if (blockSlot - 36 != slot)

@@ -71,7 +71,7 @@ class Scaffold : Module() {
     private val placeableDelay = BoolValue("PlaceableDelay", true)
 
     // Autoblock
-    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Lite-Spoof", "Spoof", "Switch"), "Spoof")
+    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Server-Spoof", "Spoof", "Switch"), "Spoof")
     private val test1 = BoolValue("helditemshit", false)
 
     // Basic stuff
@@ -540,9 +540,10 @@ class Scaffold : Module() {
                 "Off" -> {
                     return
                 }
-                "Lite-Spoof" -> {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-                    itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
+                "Server-Spoof" -> {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
+                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                    mc.playerController.updateController()
                 }
                 "Spoof" -> {
                     if (blockSlot - 36 != slot)
@@ -553,6 +554,7 @@ class Scaffold : Module() {
                     mc.playerController.updateController()
                 }
             }
+            itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }
         if (mc.playerController.onPlayerRightClick(mc.thePlayer!!, mc.theWorld!!, itemStack, targetPlace!!.blockPos, targetPlace!!.enumFacing, targetPlace!!.vec3)) {
             delayTimer.reset()
@@ -569,9 +571,6 @@ class Scaffold : Module() {
             } else {
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
             }
-        }
-        if(autoBlockValue.get().equals("Lite-Spoof", true) && blockSlot  >= 0) {
-            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
         }
         targetPlace = null
     }

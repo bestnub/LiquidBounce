@@ -536,18 +536,18 @@ class Scaffold : Module() {
             if (blockSlot == -1)
                 return
 
-            for(i in 0..3) when(autoBlockValue.get()) {
-                "0" -> {
+            when(autoBlockValue.get()) {
+                "Off" -> {
                     return
                 }
-                "1" -> {
+                "Lite-Spoof" -> {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                 }
-                "2" -> {
+                "Spoof" -> {
                     if (blockSlot - 36 != slot)
                         mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                 }
-                "3" -> {
+                "Switch" -> {
                     mc.thePlayer!!.inventory.currentItem = blockSlot - 36
                     mc.playerController.updateController()
                 }

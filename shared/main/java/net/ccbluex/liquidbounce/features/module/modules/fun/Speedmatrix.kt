@@ -32,22 +32,19 @@ class Speedmatrix: Module() {
     fun onUpdate(event: UpdateEvent) {
         if(!mc.thePlayer!!.isInWater || !mc.thePlayer!!.isInLava || !mc.thePlayer!!.isInWeb || !mc.thePlayer!!.isOnLadder) {
             if(allowValue.get()) {
-                if (!mc.thePlayer!!.onGround || pass1) {
-                    if (mc.thePlayer!!.fallDistance < fallValue.get()) {
-                        mc.thePlayer!!.speedInAir = speedAir.get()
-                        mc.timer.timerSpeed = timerValue.get()
-                        pass1 = false
-                    }
+                if (MovementUtils.isMoving) {
+                    mc.thePlayer!!.sprinting = true
+                    mc.thePlayer!!.jump()
+                    pass1 = true
+                    mc.thePlayer!!.speedInAir = speedAir2.get()
+                    mc.timer.timerSpeed = timerValue2.get()
                 } else {
-                    if (MovementUtils.isMoving) {
-                        mc.thePlayer!!.sprinting = true
-                        mc.thePlayer!!.jump()
-                        pass1 = true
-                        mc.thePlayer!!.speedInAir = speedAir2.get()
-                        mc.timer.timerSpeed = timerValue2.get()
-                    } else {
-                        mc.timer.timerSpeed = 1f
-                    }
+                    mc.timer.timerSpeed = 1f
+                }
+                if(pass1) {
+                    mc.thePlayer!!.speedInAir = speedAir.get()
+                    mc.timer.timerSpeed = timerValue.get()
+                    pass1 = false
                 }
             } else return
         } else return

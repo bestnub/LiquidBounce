@@ -497,9 +497,6 @@ class Scaffold : Module() {
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }
-        if(autoBlockValue.get().equals("Spoof", true)) {
-            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-        }
         if (mc.playerController.onPlayerRightClick(mc.thePlayer!!, mc.theWorld!!, itemStack, targetPlace!!.blockPos, targetPlace!!.enumFacing, targetPlace!!.vec3)) {
             delayTimer.reset()
             delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
@@ -514,6 +511,9 @@ class Scaffold : Module() {
                 mc.thePlayer!!.swingItem()
             else
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
+        }
+        if(autoBlockValue.get().equals("Spoof", true)) {
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
         }
         targetPlace = null
     }

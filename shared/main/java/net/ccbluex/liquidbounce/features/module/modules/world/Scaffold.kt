@@ -227,6 +227,11 @@ class Scaffold : Module() {
             mc.thePlayer!!.motionX = mc.thePlayer!!.motionX * slowSpeed.get()
             mc.thePlayer!!.motionZ = mc.thePlayer!!.motionZ * slowSpeed.get()
         }
+        if(autoBlockValue.get().equals("Server-Spoof", true)) {
+            if(!test1.get()) {
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
+            }
+        }
         if (sprintValue.get()) {
             if (!mc.gameSettings.isKeyDown(mc.gameSettings.keyBindSprint)) {
                 mc.gameSettings.keyBindSprint.pressed = false
@@ -428,8 +433,6 @@ class Scaffold : Module() {
             if(autoBlockValue.get().equals("Server-Spoof", true)) {
                 if(test1.get()) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
-                } else {
-                    mc.thePlayer!!.inventory.currentItem = oldslot
                 }
             }
             place()
@@ -444,12 +447,8 @@ class Scaffold : Module() {
     }
 
     fun update() {
-        val isHeldItemBlock: Boolean =
-            mc.thePlayer!!.heldItem != null && classProvider.isItemBlock(mc.thePlayer!!.heldItem!!.item)
-        if (if (!autoBlockValue.get()
-                    .equals("Off", true)
-            ) InventoryUtils.findAutoBlockBlock() == -1 && !isHeldItemBlock else !isHeldItemBlock
-        )
+        val isHeldItemBlock: Boolean = mc.thePlayer!!.heldItem != null && classProvider.isItemBlock(mc.thePlayer!!.heldItem!!.item)
+        if (if (!autoBlockValue.get().equals("Off", true)) InventoryUtils.findAutoBlockBlock() == -1 && !isHeldItemBlock else !isHeldItemBlock)
             return
         findBlock(modeValue.get().equals("expand", true))
     }

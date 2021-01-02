@@ -18,7 +18,6 @@ import net.ccbluex.liquidbounce.value.FloatValue
 class Speedmatrix: Module() {
 
     private val allowValue = BoolValue("Allow", false)
-    private val allowValue2 = BoolValue("Allow2", false)
     private val fallValue = FloatValue("FallDist", 1F, 0.1F, 2F)
     private val speedAir = FloatValue("SpeedInAir", 0.02F, 0.00F, 1F)
     private val timerValue = FloatValue("Timer", 1F, 0.1F, 2F)
@@ -29,29 +28,20 @@ class Speedmatrix: Module() {
     fun onUpdate(event: UpdateEvent) {
         if(allowValue.get()) {
             if(!mc.thePlayer!!.isInWater || !mc.thePlayer!!.isInLava || !mc.thePlayer!!.isInWeb || !mc.thePlayer!!.isOnLadder) {
-                if(allowValue2.get())
-                    if (!mc.thePlayer!!.onGround) {
-                        if (mc.thePlayer!!.fallDistance < fallValue.get()) {
-                        mc.thePlayer!!.speedInAir = speedAir.get()
-                        mc.timer.timerSpeed = timerValue.get()
-                    }
-                else
-                    if (!mc.thePlayer!!.onGround) {
-                        if(mc.thePlayer!!.fallDistance > fallValue.get()) {
-                            mc.thePlayer!!.speedInAir = speedAir.get()
-                            mc.timer.timerSpeed = timerValue.get()
-                        }
-                    }
+                if (!mc.thePlayer!!.onGround || mc.thePlayer!!.posY == mc.thePlayer!!.posY + 1.24919) {
+                    //if (mc.thePlayer!!.fallDistance < fallValue.get()) {
+                    mc.thePlayer!!.speedInAir = speedAir.get()
+                    mc.timer.timerSpeed = timerValue.get()
                 } else {
-                    if (MovementUtils.isMoving) {
-                        mc.thePlayer!!.sprinting = true
-                        mc.thePlayer!!.jump()
-                        mc.thePlayer!!.speedInAir = speedAir2.get()
-                        mc.timer.timerSpeed = timerValue2.get()
-                    } else {
-                        mc.timer.timerSpeed = 1f
-                    }
+                if (MovementUtils.isMoving) {
+                    mc.thePlayer!!.sprinting = true
+                    mc.thePlayer!!.jump()
+                    mc.thePlayer!!.speedInAir = speedAir2.get()
+                    mc.timer.timerSpeed = timerValue2.get()
+                } else {
+                    mc.timer.timerSpeed = 1f
                 }
+            }
             } else {
                 mc.timer.timerSpeed = 1f
                 mc.thePlayer!!.speedInAir = 0.02f

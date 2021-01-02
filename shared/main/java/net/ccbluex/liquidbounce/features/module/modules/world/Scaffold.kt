@@ -64,7 +64,7 @@ class Scaffold : Module() {
     private val placeableDelay = BoolValue("PlaceableDelay", true)
 
     // Autoblock
-    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Spoof", "Matrix", "Switch"), "Spoof")
+    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Matrix", "Spoof", "Switch"), "Spoof")
 
     // Basic stuff
     @JvmField
@@ -482,13 +482,13 @@ class Scaffold : Module() {
                 "Off" -> {
                     return
                 }
-                "Spoof" -> {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-                }
                 "Matrix" -> {
                     if(blockSlot - 36 != slot) {
                         mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                     }
+                }
+                "Spoof" -> {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                 }
                 "Switch" -> {
                     mc.thePlayer!!.inventory.currentItem = blockSlot - 36

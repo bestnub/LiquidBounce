@@ -227,7 +227,7 @@ class Scaffold : Module() {
             mc.thePlayer!!.motionX = mc.thePlayer!!.motionX * slowSpeed.get()
             mc.thePlayer!!.motionZ = mc.thePlayer!!.motionZ * slowSpeed.get()
         }
-        if(autoBlockValue.get().equals("Server-Spoof", true)) {
+        if(autoBlockValue.get().equals("Server-Spoof", true) && blockSlot >= 0) {
             if(!test1.get()) {
                 mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
             }
@@ -430,7 +430,7 @@ class Scaffold : Module() {
             setRotation(lockRotation!!)
 
         if ((facesBlock || rotationModeValue.get().equals("Off", true)) && placeModeValue.get().equals(eventState.stateName, true))
-            if(autoBlockValue.get().equals("Server-Spoof", true)) {
+            if(autoBlockValue.get().equals("Server-Spoof", true) && blockSlot >= 0) {
                 if(test1.get()) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
                 }

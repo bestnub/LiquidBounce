@@ -1,13 +1,16 @@
 package net.ccbluex.liquidbounce.features.module.modules.`fun`
 
 import net.ccbluex.liquidbounce.event.EventTarget
+import net.ccbluex.liquidbounce.event.JumpEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.MovementUtils
+import net.ccbluex.liquidbounce.utils.timer.TickTimer
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
+import net.ccbluex.liquidbounce.value.IntegerValue
 
 
 @ModuleInfo(
@@ -18,35 +21,43 @@ import net.ccbluex.liquidbounce.value.FloatValue
 class Speedmatrix: Module() {
 
     private val allowValue = BoolValue("Allow", false)
+    private val ticksValue = IntegerValue("Ticks", 20, 1, 20)
     private val fallValue = FloatValue("FallDist", 1F, 0.1F, 2F)
     private val speedAir = FloatValue("SpeedInAir", 0.02F, 0.00F, 1F)
     private val timerValue = FloatValue("Timer", 1F, 0.1F, 2F)
     private val speedAir2 = FloatValue("SpeedInAir2", 0.02F, 0.00F, 1F)
     private val timerValue2 = FloatValue("Timer2", 1F, 0.1F, 2F)
 
+    private var pass1: Boolean = false
+    private var pass2: Boolean = false
+
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if(allowValue.get()) {
-            if(!mc.thePlayer!!.isInWater || !mc.thePlayer!!.isInLava || !mc.thePlayer!!.isInWeb || !mc.thePlayer!!.isOnLadder) {
-                if (!mc.thePlayer!!.onGround || mc.thePlayer!!.posY == mc.thePlayer!!.posY + 1.24919) {
-                    //if (mc.thePlayer!!.fallDistance < fallValue.get()) {
-                    mc.thePlayer!!.speedInAir = speedAir.get()
-                    mc.timer.timerSpeed = timerValue.get()
-                } else {
+        if(!mc.thePlayer!!.isInWater || !mc.thePlayer!!.isInLava || !mc.thePlayer!!.isInWeb || !mc.thePlayer!!.isOnLadder) {
+            if(allowValue.get()) {
                 if (MovementUtils.isMoving) {
                     mc.thePlayer!!.sprinting = true
                     mc.thePlayer!!.jump()
+                    if(!pass1) {
+                        pass1 = true
+                    }
                     mc.thePlayer!!.speedInAir = speedAir2.get()
                     mc.timer.timerSpeed = timerValue2.get()
                 } else {
                     mc.timer.timerSpeed = 1f
                 }
-            }
-            } else {
-                mc.timer.timerSpeed = 1f
-                mc.thePlayer!!.speedInAir = 0.02f
-            }
+            } else return
         } else return
+    }
+    @EventTarget
+    fun onJump(event: JumpEvent) {
+        if(pass1) {
+            mc.thePlayer!!.speedInAir = speedAir.get()
+            mc.timer.timerSpeed = timerValue.get()
+            if(TickTimer().hasTimePassed(ticksValue.get())) {
+                pass1 = false
+            }
+        }
     }
     override fun onDisable() {
         mc.timer.timerSpeed = 1f

@@ -7,6 +7,7 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.MovementUtils
+import net.ccbluex.liquidbounce.utils.timer.TickTimer
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 
@@ -47,10 +48,19 @@ class Speedmatrix: Module() {
                 if(pass1 || !mc.thePlayer!!.onGround) {
                     mc.thePlayer!!.speedInAir = speedAir.get()
                     mc.timer.timerSpeed = timerValue.get()
-                    pass1 = false
+                    passOff()
                     mc.thePlayer!!.onGround = true
                 }
             } else return
+        } else return
+    }
+    fun passOff() {
+        if(pass1){
+            TickTimer().update()
+            if(TickTimer().hasTimePassed(20)) {
+                pass1 = false
+                TickTimer().reset()
+            }
         } else return
     }
     override fun onDisable() {

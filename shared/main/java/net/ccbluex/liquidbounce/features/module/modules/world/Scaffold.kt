@@ -563,9 +563,7 @@ class Scaffold : Module() {
             }
         }
         if(autoBlockValue.get().equals("Server-Spoof", true)) {
-            if(test1.get()) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
-            }
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
         }
         targetPlace = null
     }

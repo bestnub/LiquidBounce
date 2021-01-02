@@ -54,9 +54,7 @@ class Speedmatrix: Module() {
         if(pass1) {
             mc.thePlayer!!.speedInAir = speedAir.get()
             mc.timer.timerSpeed = timerValue.get()
-            if(TickTimer().hasTimePassed(ticksValue.get())) {
-                pass1 = false
-            }
+            pass1 = false
         }
     }
     override fun onDisable() {

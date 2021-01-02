@@ -497,6 +497,9 @@ class Scaffold : Module() {
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }
+        if(autoBlockValue.get().equals("Spoof", true)) {
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+        }
         if (mc.playerController.onPlayerRightClick(mc.thePlayer!!, mc.theWorld!!, itemStack, targetPlace!!.blockPos, targetPlace!!.enumFacing, targetPlace!!.vec3)) {
             delayTimer.reset()
             delay = TimeUtils.randomDelay(minDelayValue.get(), maxDelayValue.get())
@@ -511,9 +514,6 @@ class Scaffold : Module() {
                 mc.thePlayer!!.swingItem()
             else
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
-        }
-        if(autoBlockValue.get().equals("Spoof", true)) {
-            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
         }
         targetPlace = null
     }
@@ -547,7 +547,7 @@ class Scaffold : Module() {
             mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
     }
 
-// Entity movement event
+    // Entity movement event
     /** @param event */
     @EventTarget
     fun onMove(event: MoveEvent) {
@@ -716,19 +716,19 @@ class Scaffold : Module() {
     }
     // RETURN HOTBAR AMOUNT
     private val blocksAmount: Int
-        get() {
-            var amount = 0
-            for (i in 36..44) {
-                val itemStack: IItemStack? = mc.thePlayer!!.inventoryContainer.getSlot(i).stack
-                if (itemStack != null && classProvider.isItemBlock(itemStack.item)) {
-                    val block: IBlock = (itemStack.item!!.asItemBlock()).block
-                    val heldItem: IItemStack? = mc.thePlayer!!.heldItem
-                    if (heldItem != null && heldItem == itemStack || !InventoryUtils.BLOCK_BLACKLIST.contains(block) && !classProvider.isBlockBush(block))
-                        amount += itemStack.stackSize
-                }
+    get() {
+        var amount = 0
+        for (i in 36..44) {
+            val itemStack: IItemStack? = mc.thePlayer!!.inventoryContainer.getSlot(i).stack
+            if (itemStack != null && classProvider.isItemBlock(itemStack.item)) {
+                val block: IBlock = (itemStack.item!!.asItemBlock()).block
+                val heldItem: IItemStack? = mc.thePlayer!!.heldItem
+                if (heldItem != null && heldItem == itemStack || !InventoryUtils.BLOCK_BLACKLIST.contains(block) && !classProvider.isBlockBush(block))
+                    amount += itemStack.stackSize
             }
-            return amount
         }
+        return amount
+    }
     override val tag: String
         get() = modeValue.get()
 }

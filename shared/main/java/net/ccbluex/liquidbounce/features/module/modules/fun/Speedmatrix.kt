@@ -43,9 +43,7 @@ class Speedmatrix: Module() {
                         mc.timer.timerSpeed = 1f
                     }
                 }
-            } else {
-                mc.timer.timerSpeed = 1f
-            }
+            } else return
         } else return
     }
     override fun onDisable() {

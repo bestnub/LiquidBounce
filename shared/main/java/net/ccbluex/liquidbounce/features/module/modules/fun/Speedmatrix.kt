@@ -28,30 +28,34 @@ class Speedmatrix: Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if(allowValue.get()) {
-            if(!mc.thePlayer!!.isInWater || !mc.thePlayer!!.isInLava) {
-                if(allowValue2.get()) {
+            if(!mc.thePlayer!!.isInWater || !mc.thePlayer!!.isInLava || !mc.thePlayer!!.isInWeb || !mc.thePlayer!!.isOnLadder) {
+                if(allowValue2.get())
                     if (!mc.thePlayer!!.onGround) {
                         if (mc.thePlayer!!.fallDistance < fallValue.get()) {
-                            mc.thePlayer!!.speedInAir = speedAir.get()
-                            mc.timer.timerSpeed = timerValue.get()
-                        }
-                    } else {
-                        if (MovementUtils.isMoving) {
-                            mc.thePlayer!!.sprinting = true
-                            mc.thePlayer!!.jump()
-                            mc.thePlayer!!.speedInAir = speedAir2.get()
-                            mc.timer.timerSpeed = timerValue2.get()
-                        } else {
-                            mc.timer.timerSpeed = 1f
-                        }
-                    }
-                } else {
-                    if (mc.thePlayer!!.isAirBorne) {
                         mc.thePlayer!!.speedInAir = speedAir.get()
                         mc.timer.timerSpeed = timerValue.get()
                     }
+                else
+                    if (!mc.thePlayer!!.onGround) {
+                        if(mc.thePlayer!!.fallDistance > fallValue.get()) {
+                            mc.thePlayer!!.speedInAir = speedAir.get()
+                            mc.timer.timerSpeed = timerValue.get()
+                        }
+                    }
+                } else {
+                    if (MovementUtils.isMoving) {
+                        mc.thePlayer!!.sprinting = true
+                        mc.thePlayer!!.jump()
+                        mc.thePlayer!!.speedInAir = speedAir2.get()
+                        mc.timer.timerSpeed = timerValue2.get()
+                    } else {
+                        mc.timer.timerSpeed = 1f
+                    }
                 }
-            } else return
+            } else {
+                mc.timer.timerSpeed = 1f
+                mc.thePlayer!!.speedInAir = 0.02f
+            }
         } else return
     }
     override fun onDisable() {

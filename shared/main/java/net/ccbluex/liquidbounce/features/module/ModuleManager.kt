@@ -12,6 +12,7 @@ import net.ccbluex.liquidbounce.event.Listenable
 import net.ccbluex.liquidbounce.features.module.modules.`fun`.Derp
 import net.ccbluex.liquidbounce.features.module.modules.`fun`.SkinDerp
 import net.ccbluex.liquidbounce.features.module.modules.`fun`.Speedmatrix
+import net.ccbluex.liquidbounce.features.module.modules.`fun`.Updates
 import net.ccbluex.liquidbounce.features.module.modules.combat.*
 import net.ccbluex.liquidbounce.features.module.modules.exploit.*
 import net.ccbluex.liquidbounce.features.module.modules.misc.*
@@ -61,6 +62,7 @@ class ModuleManager : Listenable {
                 WallClimb::class.java,
                 Strafe::class.java,
                 Sprint::class.java,
+                Updates::class.java,
                 Teams::class.java,
                 NoRotateSet::class.java,
                 ChestStealer::class.java,

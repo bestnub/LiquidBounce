@@ -227,11 +227,6 @@ class Scaffold : Module() {
             mc.thePlayer!!.motionX = mc.thePlayer!!.motionX * slowSpeed.get()
             mc.thePlayer!!.motionZ = mc.thePlayer!!.motionZ * slowSpeed.get()
         }
-        if(autoBlockValue.get().equals("Server-Spoof", true) && blockSlot >= 0) {
-            if(!test1.get()) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
-            }
-        }
         if (sprintValue.get()) {
             if (!mc.gameSettings.isKeyDown(mc.gameSettings.keyBindSprint)) {
                 mc.gameSettings.keyBindSprint.pressed = false
@@ -430,11 +425,6 @@ class Scaffold : Module() {
             setRotation(lockRotation!!)
 
         if ((facesBlock || rotationModeValue.get().equals("Off", true)) && placeModeValue.get().equals(eventState.stateName, true))
-            if(autoBlockValue.get().equals("Server-Spoof", true) && blockSlot >= 0) {
-                if(test1.get()) {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
-                }
-            }
             place()
 
         // Update and search for a new block
@@ -570,6 +560,11 @@ class Scaffold : Module() {
                 mc.thePlayer!!.swingItem()
             } else {
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
+            }
+        }
+        if(autoBlockValue.get().equals("Server-Spoof", true)) {
+            if(test1.get()) {
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(oldslot))
             }
         }
         targetPlace = null

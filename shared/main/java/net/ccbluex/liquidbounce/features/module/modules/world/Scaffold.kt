@@ -462,6 +462,7 @@ class Scaffold : Module() {
     }
 
     var spoofb: Boolean = false
+    val spoof = MSTimer()
     fun place() {
         if (targetPlace == null) {
             if (placeableDelay.get()) delayTimer.reset()
@@ -491,12 +492,10 @@ class Scaffold : Module() {
                     }
                 }
                 "Spoof" -> {
-                    val spoof = TickTimer()
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                     spoofb = true
                     if(spoofb) {
-                        spoof.update()
-                        if(spoof.hasTimePassed(spoofValue.get())) {
+                        if(spoof.hasTimePassed(spoofValue.get().toLong())) {
                             mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
                             spoofb = false
                             spoof.reset()

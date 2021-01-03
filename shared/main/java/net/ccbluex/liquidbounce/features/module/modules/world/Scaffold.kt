@@ -488,7 +488,9 @@ class Scaffold : Module() {
                     }
                 }
                 "Spoof" -> {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    if(blockSlot >= 0) {
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    }
                 }
                 "Switch" -> {
                     mc.thePlayer!!.inventory.currentItem = blockSlot - 36

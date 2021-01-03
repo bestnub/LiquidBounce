@@ -517,11 +517,8 @@ class Scaffold : Module() {
             else
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
         }
-        if(autoBlockValue.get().equals("Spoof", true) && blockSlot >= 0) {
-            if(spoof.hasTimePassed(spoofValue.get().toLong())) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-                spoof.reset()
-            }
+        if(autoBlockValue.get().equals("Spoof", true) && blockSlot > spoofValue.get()) {
+            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
         }
         targetPlace = null
     }

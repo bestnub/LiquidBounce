@@ -30,6 +30,7 @@ import net.ccbluex.liquidbounce.utils.block.BlockUtils.isReplaceable
 import net.ccbluex.liquidbounce.utils.block.PlaceInfo
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
+import net.ccbluex.liquidbounce.utils.timer.TickTimer
 import net.ccbluex.liquidbounce.utils.timer.TimeUtils
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
@@ -65,6 +66,7 @@ class Scaffold : Module() {
 
     // Autoblock
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Matrix", "Spoof", "Switch"), "Spoof")
+    private val spoofValue = IntegerValue("SpoofTicks", 0, 0, 20)
 
     // Basic stuff
     @JvmField
@@ -459,6 +461,7 @@ class Scaffold : Module() {
         }
     }
 
+    var spoofb: Boolean = false
     fun place() {
         if (targetPlace == null) {
             if (placeableDelay.get()) delayTimer.reset()
@@ -488,8 +491,16 @@ class Scaffold : Module() {
                     }
                 }
                 "Spoof" -> {
-                    if(blockSlot >= 0) {
-                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    val spoof = TickTimer()
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    spoofb = true
+                    if(spoofb) {
+                        spoof.update()
+                        if(spoof.hasTimePassed(spoofValue.get())) {
+                            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+                            spoofb = false
+                            spoof.reset()
+                        }
                     }
                 }
                 "Switch" -> {
@@ -514,9 +525,9 @@ class Scaffold : Module() {
             else
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
         }
-        if(autoBlockValue.get().equals("Spoof", true)) {
+        /*if(autoBlockValue.get().equals("Spoof", true)) {
             mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-        }
+        }*/
         targetPlace = null
     }
 

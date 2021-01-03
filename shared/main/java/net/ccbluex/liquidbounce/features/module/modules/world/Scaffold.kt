@@ -493,14 +493,6 @@ class Scaffold : Module() {
                 }
                 "Spoof" -> {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-                    spoofb = true
-                    if(spoofb) {
-                        if(spoof.hasTimePassed(spoofValue.get().toLong())) {
-                            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-                            spoofb = false
-                            spoof.reset()
-                        }
-                    }
                 }
                 "Switch" -> {
                     mc.thePlayer!!.inventory.currentItem = blockSlot - 36
@@ -524,9 +516,12 @@ class Scaffold : Module() {
             else
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
         }
-        /*if(autoBlockValue.get().equals("Spoof", true)) {
-            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
-        }*/
+        if(autoBlockValue.get().equals("Spoof", true)) {
+            if(spoof.hasTimePassed(spoofValue.get().toLong())) {
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
+                spoof.reset()
+            }
+        }
         targetPlace = null
     }
 

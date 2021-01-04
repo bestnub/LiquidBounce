@@ -68,11 +68,9 @@ class Sprint : Module() {
                 if (!stopSprint && mc.thePlayer!!.moveForward <= 0) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketEntityAction(mc.thePlayer!!, ICPacketEntityAction.WAction.STOP_SPRINTING))
                     stopSprint = true
-                    mc.thePlayer!!.sprinting = false
                 } else if (stopSprint) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketEntityAction(mc.thePlayer!!, ICPacketEntityAction.WAction.START_SPRINTING))
                     stopSprint = false
-                    mc.thePlayer!!.sprinting = true
                 }
             } else {
                 stopSprint = false

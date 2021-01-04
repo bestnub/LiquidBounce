@@ -55,7 +55,11 @@ class Speedmatrix: Module() {
                     }
                 }
             } else return
-        } else return
+        } else {
+            mc.timer.timerSpeed = 1f
+            mc.thePlayer!!.speedInAir = 0.02f
+            return
+        }
     }
     override fun onDisable() {
         mc.timer.timerSpeed = 1f

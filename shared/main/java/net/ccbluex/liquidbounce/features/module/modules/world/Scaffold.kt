@@ -28,6 +28,7 @@ import net.ccbluex.liquidbounce.utils.*
 import net.ccbluex.liquidbounce.utils.block.BlockUtils.canBeClicked
 import net.ccbluex.liquidbounce.utils.block.BlockUtils.isReplaceable
 import net.ccbluex.liquidbounce.utils.block.PlaceInfo
+import net.ccbluex.liquidbounce.utils.misc.RandomUtils
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.utils.timer.MSTimer
 import net.ccbluex.liquidbounce.utils.timer.TickTimer
@@ -65,7 +66,7 @@ class Scaffold : Module() {
     private val placeableDelay = BoolValue("PlaceableDelay", true)
 
     // Autoblock
-    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Matrix", "Spoof", "Switch"), "Spoof")
+    private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Matrix", "Spoof", "Switch", "ConstantSwitch"), "Spoof")
     private val spoofValue = IntegerValue("SpoofTicks", 0, 0, 20)
 
     // Basic stuff
@@ -499,6 +500,9 @@ class Scaffold : Module() {
                     mc.thePlayer!!.inventory.currentItem = blockSlot - 36
                     mc.playerController.updateController()
                 }
+                "ConstantSwitch" -> {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - RandomUtils.nextInt(36, 44)))
+                }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
         }
@@ -532,7 +536,7 @@ class Scaffold : Module() {
                 mc.netHandler.addToSendQueue(classProvider.createCPacketEntityAction(mc.thePlayer!!, ICPacketEntityAction.WAction.STOP_SNEAKING))
         }
 
-        if(autoBlockValue.get().equals("Switch", ignoreCase = true)) {
+        if(autoBlockValue.get().equals("Switch",true) || autoBlockValue.get().equals("ConstantSwitch", true)) {
             mc.thePlayer!!.inventory.currentItem = oldslot
             mc.playerController.updateController()
         }

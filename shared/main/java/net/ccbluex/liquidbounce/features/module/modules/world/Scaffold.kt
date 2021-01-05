@@ -501,7 +501,7 @@ class Scaffold : Module() {
                     mc.playerController.updateController()
                 }
                 "ConstantSwitch" -> {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - RandomUtils.nextInt(36, 44)))
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - RandomUtils.nextInt(39, 40)))
                     ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
                 }
             }

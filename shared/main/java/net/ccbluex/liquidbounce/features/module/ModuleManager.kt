@@ -176,10 +176,10 @@ class ModuleManager : Listenable {
                 TNTESP::class.java,
                 ComponentOnHover::class.java,
                 KeepAlive::class.java,
+                Spoof::class.java,
                 ResourcePackSpoof::class.java,
                 NoSlowBreak::class.java,
-                PortalMenu::class.java,
-                Spoof::class.java
+                PortalMenu::class.java
         )
 
         registerModule(NoScoreboard)

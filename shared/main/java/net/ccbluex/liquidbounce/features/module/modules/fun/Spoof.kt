@@ -36,7 +36,7 @@ class Spoof: Module() {
         slot = mc.thePlayer!!.inventory.currentItem
     }
 
-    @EventTarget
+/*    @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if (blockSlot == -1)
             return
@@ -77,5 +77,5 @@ class Spoof: Module() {
                 }
             }
         }
-    }
+    }*/
 }

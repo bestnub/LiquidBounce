@@ -71,6 +71,8 @@ class Scaffold : Module() {
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Matrix", "Spoof", "Switch", "ConstantSwitch"), "Spoof")
     private val spoofValue = IntegerValue("SpoofTicks", 0, 0, 20)
     private val blocktest = BoolValue("test", false)
+    private val number1 = IntegerValue("number1", 1, 1, 6)
+    private val number2 = IntegerValue("number2", 1, 1, 6)
 
     // Basic stuff
     @JvmField
@@ -505,11 +507,11 @@ class Scaffold : Module() {
                 }
                 "ConstantSwitch" -> {
                     if(blocktest.get()) {
-                        mc.thePlayer!!.inventory.currentItem = blockSlot - RandomUtils.nextInt(39,40)
+                        mc.thePlayer!!.inventory.currentItem = blockSlot - RandomUtils.nextInt(number1.get(),number2.get())
                         mc.playerController.updateController()
                         ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
                     } else {
-                        mc.thePlayer!!.inventory.currentItem = blockSlot - Random.nextInt(39,40)
+                        mc.thePlayer!!.inventory.currentItem = blockSlot - Random.nextInt(number1.get(),number2.get())
                         mc.playerController.updateController()
                         ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
                     }

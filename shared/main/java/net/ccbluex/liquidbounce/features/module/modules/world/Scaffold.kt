@@ -8,6 +8,7 @@
 
 package net.ccbluex.liquidbounce.features.module.modules.world
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.api.enums.BlockType
 import net.ccbluex.liquidbounce.api.enums.EnumFacingType
@@ -41,6 +42,7 @@ import org.lwjgl.input.Keyboard
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import kotlin.math.*
+import kotlin.random.Random
 
 @ModuleInfo(name = "Scaffold", description = "Automatically places blocks beneath your feet.", category = ModuleCategory.WORLD, keyBind = Keyboard.KEY_I)
 class Scaffold : Module() {
@@ -68,6 +70,7 @@ class Scaffold : Module() {
     // Autoblock
     private val autoBlockValue = ListValue("AutoBlock", arrayOf("Off", "Matrix", "Spoof", "Switch", "ConstantSwitch"), "Spoof")
     private val spoofValue = IntegerValue("SpoofTicks", 0, 0, 20)
+    private val blocktest = BoolValue("test", false)
 
     // Basic stuff
     @JvmField
@@ -501,8 +504,15 @@ class Scaffold : Module() {
                     mc.playerController.updateController()
                 }
                 "ConstantSwitch" -> {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - RandomUtils.nextInt(39, 40)))
-                    ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
+                    if(blocktest.get()) {
+                        mc.thePlayer!!.inventory.currentItem = blockSlot - RandomUtils.nextInt(39,40)
+                        mc.playerController.updateController()
+                        ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
+                    } else {
+                        mc.thePlayer!!.inventory.currentItem = blockSlot - Random.nextInt(39,40)
+                        mc.playerController.updateController()
+                        ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
+                    }
                 }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack

@@ -8,7 +8,8 @@ import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.ClientUtils
 import net.ccbluex.liquidbounce.utils.InventoryUtils
 import net.ccbluex.liquidbounce.utils.timer.TickTimer
-import net.ccbluex.liquidbounce.value.*
+import net.ccbluex.liquidbounce.value.BoolValue
+import net.ccbluex.liquidbounce.value.IntegerValue
 
 @ModuleInfo(
     name = "Spoof",
@@ -43,7 +44,7 @@ class Spoof: Module() {
         if(debugValue.get()) {
             debugTick.update()
             if(debugTick.hasTimePassed(debugTicks.get())) {
-                ClientUtils.displayChatMessage("Block slot: ${blockSlot}")
+                ClientUtils.displayChatMessage("Block slot: $blockSlot")
                 debugTick.reset()
             }
         } else return

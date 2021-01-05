@@ -29,15 +29,17 @@ class Spoof: Module() {
 
     private var allowTick = TickTimer()
     private var debugTick= TickTimer()
-    private val blockSlot = -1
+    private var blockSlot = -1
     private var slot = 0
 
     override fun onEnable() {
         slot = mc.thePlayer!!.inventory.currentItem
     }
 
-/*    @EventTarget
+    @EventTarget
     fun onUpdate(event: UpdateEvent) {
+
+        blockSlot = InventoryUtils.findAutoBlockBlock()
         if (blockSlot == -1)
             return
 
@@ -77,5 +79,5 @@ class Spoof: Module() {
                 }
             }
         }
-    }*/
+    }
 }

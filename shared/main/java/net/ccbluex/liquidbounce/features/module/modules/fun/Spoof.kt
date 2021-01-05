@@ -58,18 +58,18 @@ class Spoof: Module() {
                 }
             } else return
             if (allowValue2.get()) {
-                if (blockSlot - 36 != slot) {
-                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                if (blockSlot - blockSlotValue.get() != slot) {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - blockSlotValue.get()))
                 }
             } else return
             if (allowValue3.get()) {
                 if (blockSlot >= 0) {
-                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                    mc.thePlayer!!.inventory.currentItem = blockSlot - blockSlotValue.get()
                     mc.playerController.updateController()
                 }
             } else return
             if (allowValue4.get()) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - blockSlotValue.get()))
             } else return
 
             if (allowValue4.get()) {

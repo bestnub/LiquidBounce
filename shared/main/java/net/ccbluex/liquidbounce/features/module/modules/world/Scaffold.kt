@@ -502,6 +502,7 @@ class Scaffold : Module() {
                 }
                 "ConstantSwitch" -> {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - RandomUtils.nextInt(36, 44)))
+                    ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
                 }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack

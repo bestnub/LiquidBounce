@@ -44,25 +44,25 @@ class Spoof: Module() {
         if(debugValue.get()) {
             debugTick.update()
             if(debugTick.hasTimePassed(debugTicks.get())) {
-                ClientUtils.displayChatMessage("Block slot: ${blockSlot - 36}")
+                ClientUtils.displayChatMessage("Block slot: ${blockSlot}")
                 debugTick.reset()
             }
         } else return
         if(allowValue.get()) {
             if(mc.thePlayer!!.inventory.currentItem != slot) {
                 mc.thePlayer!!.inventory.currentItem = slot
-            } else return
+            }
         } else return
         if(allowValue2.get()) {
             if(blockSlot - 36 != slot) {
                 mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-            } else return
+            }
         } else return
         if(allowValue3.get()) {
             if(blockSlot >= 0) {
                 mc.thePlayer!!.inventory.currentItem = blockSlot - 36
                 mc.playerController.updateController()
-            } else return
+            }
         } else return
         if(allowValue4.get()) {
             mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
@@ -75,7 +75,7 @@ class Spoof: Module() {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slot))
                     allowTick.reset()
                 }
-            } else return
+            }
         }
     }
 }

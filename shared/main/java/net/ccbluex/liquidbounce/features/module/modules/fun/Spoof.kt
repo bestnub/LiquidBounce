@@ -26,6 +26,7 @@ class Spoof: Module() {
     private val timerValue = IntegerValue("Ticks", 0, 0, 20)
     private val debugValue = BoolValue("Debug", false)
     private val debugTicks = IntegerValue("Debug-Ticks", 0, 0, 20)
+    private val blockSlotValue = IntegerValue("BlockSlot", 36, 0, 45)
 
     private var allowTick = TickTimer()
     private var debugTick= TickTimer()
@@ -50,30 +51,30 @@ class Spoof: Module() {
                 debugTick.reset()
             }
         } else return
-        if(allowValue.get()) {
-            if(mc.thePlayer!!.inventory.currentItem != slot) {
-                mc.thePlayer!!.inventory.currentItem = slot
-            }
-        } else return
-        if(allowValue2.get()) {
-            if(blockSlot - 36 != slot) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-            }
-        } else return
-        if(allowValue3.get()) {
-            if(blockSlot >= 0) {
-                mc.thePlayer!!.inventory.currentItem = blockSlot - 36
-                mc.playerController.updateController()
-            }
-        } else return
-        if(allowValue4.get()) {
-            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-        } else return
-
         if(mc.gameSettings.keyBindUseItem.pressed) {
-            if(allowValue4.get()) {
+            if (allowValue.get()) {
+                if (mc.thePlayer!!.inventory.currentItem != slot) {
+                    mc.thePlayer!!.inventory.currentItem = slot
+                }
+            } else return
+            if (allowValue2.get()) {
+                if (blockSlot - 36 != slot) {
+                    mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                }
+            } else return
+            if (allowValue3.get()) {
+                if (blockSlot >= 0) {
+                    mc.thePlayer!!.inventory.currentItem = blockSlot - 36
+                    mc.playerController.updateController()
+                }
+            } else return
+            if (allowValue4.get()) {
+                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+            } else return
+
+            if (allowValue4.get()) {
                 allowTick.update()
-                if(allowTick.hasTimePassed(timerValue.get())) {
+                if (allowTick.hasTimePassed(timerValue.get())) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slot))
                     allowTick.reset()
                 }

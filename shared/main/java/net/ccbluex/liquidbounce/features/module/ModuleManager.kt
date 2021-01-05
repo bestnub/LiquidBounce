@@ -9,10 +9,7 @@ import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.KeyEvent
 import net.ccbluex.liquidbounce.event.Listenable
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.Derp
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.SkinDerp
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.Speedmatrix
-import net.ccbluex.liquidbounce.features.module.modules.`fun`.Updates
+import net.ccbluex.liquidbounce.features.module.modules.`fun`.*
 import net.ccbluex.liquidbounce.features.module.modules.combat.*
 import net.ccbluex.liquidbounce.features.module.modules.exploit.*
 import net.ccbluex.liquidbounce.features.module.modules.misc.*
@@ -181,7 +178,8 @@ class ModuleManager : Listenable {
                 KeepAlive::class.java,
                 ResourcePackSpoof::class.java,
                 NoSlowBreak::class.java,
-                PortalMenu::class.java
+                PortalMenu::class.java,
+                Spoof::class.java
         )
 
         registerModule(NoScoreboard)

@@ -44,7 +44,7 @@ class Spoof: Module() {
         if(debugValue.get()) {
             debugTick.update()
             if(debugTick.hasTimePassed(debugTicks.get())) {
-                ClientUtils.displayChatMessage("Block slot: $blockSlot")
+                ClientUtils.displayChatMessage("Block slot: ${blockSlot - 36}")
                 debugTick.reset()
             }
         } else return

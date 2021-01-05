@@ -29,7 +29,7 @@ class Spoof: Module() {
 
     private var allowTick = TickTimer()
     private var debugTick= TickTimer()
-    private val blockSlot = InventoryUtils.findAutoBlockBlock()
+    private val blockSlot = -1
     private var slot = 0
 
     override fun onEnable() {

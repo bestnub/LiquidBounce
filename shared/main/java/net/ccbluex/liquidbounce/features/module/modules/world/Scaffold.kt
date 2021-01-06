@@ -506,9 +506,9 @@ class Scaffold : Module() {
                     mc.playerController.updateController()
                 }
                 "ConstantSwitch" -> {
-                    var slotchange = blockSlot * 0 + Random.nextInt(number1.get(), number2.get())
-                    constantSwitch()
-                    /*if (itemStack != null && classProvider.isItemBlock(itemStack.item) && itemStack.stackSize > 0) {
+                    val slotchange = blockSlot * 0 + Random.nextInt(number1.get(), number2.get())
+                    //constantSwitch()
+                    if (classProvider.isItemBlock(itemStack)) {
                         if (blocktest.get()) {
                             mc.thePlayer!!.inventory.currentItem = slotchange
                             mc.playerController.updateController()
@@ -519,7 +519,8 @@ class Scaffold : Module() {
                         }
                     } else {
                         mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-                    }*/
+                        place()
+                    }
                 }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
@@ -756,7 +757,7 @@ class Scaffold : Module() {
         }
         return amount
     }
-    private fun constantSwitch() {
+    /*private fun constantSwitch() {
         for(i in 1..9) {
             val itemStack: IItemStack? = mc.thePlayer!!.inventoryContainer.getSlot(i).stack
             blockSlot = InventoryUtils.findAutoBlockBlock()
@@ -767,7 +768,7 @@ class Scaffold : Module() {
                 }
             }
         }
-    }
+    }*/
     override val tag: String
         get() = modeValue.get()
 }

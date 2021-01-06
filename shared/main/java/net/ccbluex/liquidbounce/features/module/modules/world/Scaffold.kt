@@ -759,7 +759,7 @@ class Scaffold : Module() {
     private fun constantSwitch() {
         for(i in 1..9) {
             val itemStack: IItemStack? = mc.thePlayer!!.inventoryContainer.getSlot(i).stack
-            val blockSlot = InventoryUtils.findAutoBlockBlock()
+            blockSlot = InventoryUtils.findAutoBlockBlock()
             if (classProvider.isItemBlock(itemStack!!.item)) {
                 val block: IBlock = (itemStack.item!!.asItemBlock()).block
                 if (!InventoryUtils.BLOCK_BLACKLIST.contains(block) && !classProvider.isBlockBush(block)) {

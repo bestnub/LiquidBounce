@@ -757,7 +757,7 @@ class Scaffold : Module() {
         return amount
     }
     private fun constantSwitch() {
-        for(i in 36..44) {
+        for(i in 1..9) {
             val itemStack: IItemStack? = mc.thePlayer!!.inventoryContainer.getSlot(i).stack
             val blockSlot = InventoryUtils.findAutoBlockBlock()
             if (classProvider.isItemBlock(itemStack!!.item)) {

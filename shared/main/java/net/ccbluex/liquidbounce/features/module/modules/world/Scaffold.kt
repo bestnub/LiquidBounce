@@ -509,18 +509,21 @@ class Scaffold : Module() {
                     val slotchange = blockSlot * 0 + Random.nextInt(number1.get(), number2.get())
                     //constantSwitch()
                     val block: IBlock = (itemStack!!.item!!.asItemBlock()).block
-                    if (classProvider.isItemBlock(block)) {
+                    var test1: Boolean = true
+                    if (blockSlot != -1 || test1) {
                         if (blocktest.get()) {
                             mc.thePlayer!!.inventory.currentItem = slotchange
                             mc.playerController.updateController()
                             ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
+                            test1 = false
                         } else {
                             mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slotchange))
                             ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
+                            test1 = false
                         }
                     } else {
                         mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
-                        place()
+                        test1 = true
                     }
                 }
             }

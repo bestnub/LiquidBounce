@@ -508,7 +508,8 @@ class Scaffold : Module() {
                 "ConstantSwitch" -> {
                     val slotchange = blockSlot * 0 + Random.nextInt(number1.get(), number2.get())
                     //constantSwitch()
-                    if (classProvider.isItemBlock(itemStack)) {
+                    val block: IBlock = (itemStack!!.item!!.asItemBlock()).block
+                    if (classProvider.isItemBlock(block)) {
                         if (blocktest.get()) {
                             mc.thePlayer!!.inventory.currentItem = slotchange
                             mc.playerController.updateController()

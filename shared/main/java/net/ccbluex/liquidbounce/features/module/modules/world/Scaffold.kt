@@ -470,6 +470,11 @@ class Scaffold : Module() {
     var spoofb: Boolean = false
     val spoof = MSTimer()
     var blockSlot = -1
+
+    fun randomIntFrom(min: Int,max: Int): Double {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
     fun place() {
         if (targetPlace == null) {
             if (placeableDelay.get()) delayTimer.reset()
@@ -506,14 +511,14 @@ class Scaffold : Module() {
                     mc.playerController.updateController()
                 }
                 "ConstantSwitch" -> {
-                    var slotchange = blockSlot * 0 + Random.nextInt(number1.get(), number2.get())
+                    val slotchange = blockSlot * 0 + randomIntFrom(number1.get(), number2.get())
                     //constantSwitch()
                     if (blocktest.get()) {
-                        mc.thePlayer!!.inventory.currentItem = slotchange
+                        mc.thePlayer!!.inventory.currentItem = slotchange.toInt()
                         mc.playerController.updateController()
                         ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
                     } else {
-                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slotchange))
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slotchange.toInt()))
                         ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
                     }
                 }

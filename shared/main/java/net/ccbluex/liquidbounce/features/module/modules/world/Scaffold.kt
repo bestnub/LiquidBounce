@@ -507,13 +507,17 @@ class Scaffold : Module() {
                 }
                 "ConstantSwitch" -> {
                     var slotchange = blockSlot * 0 + Random.nextInt(number1.get(), number2.get())
-                    if(blocktest.get()) {
-                        mc.thePlayer!!.inventory.currentItem = slotchange
-                        mc.playerController.updateController()
-                        ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
+                    if (itemStack != null && classProvider.isItemBlock(itemStack.item) && itemStack.stackSize > 0) {
+                        if (blocktest.get()) {
+                            mc.thePlayer!!.inventory.currentItem = slotchange
+                            mc.playerController.updateController()
+                            ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
+                        } else {
+                            mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slotchange))
+                            ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
+                        }
                     } else {
-                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slotchange))
-                        ClientUtils.displayChatMessage("Blockslot: ${blockSlot}")
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                     }
                 }
             }

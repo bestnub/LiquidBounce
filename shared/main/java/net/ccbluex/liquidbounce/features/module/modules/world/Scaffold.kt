@@ -535,7 +535,7 @@ class Scaffold : Module() {
             else
                 mc.netHandler.addToSendQueue(classProvider.createCPacketAnimation())
         }
-        if(autoBlockValue.get().equals("Spoof", true)) {
+        if(autoBlockValue.get().equals("Spoof", true) && autoBlockValue.get().equals("ConstantSwitch", true)) {
             mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(mc.thePlayer!!.inventory.currentItem))
         }
         targetPlace = null

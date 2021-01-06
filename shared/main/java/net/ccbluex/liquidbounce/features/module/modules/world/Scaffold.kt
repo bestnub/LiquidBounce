@@ -762,8 +762,7 @@ class Scaffold : Module() {
             val blockSlot = InventoryUtils.findAutoBlockBlock()
             if (classProvider.isItemBlock(itemStack!!.item)) {
                 val block: IBlock = (itemStack.item!!.asItemBlock()).block
-                val heldItem: IItemStack? = mc.thePlayer!!.heldItem
-                if (heldItem == itemStack || !InventoryUtils.BLOCK_BLACKLIST.contains(block) && !classProvider.isBlockBush(block)) {
+                if (!InventoryUtils.BLOCK_BLACKLIST.contains(block) && !classProvider.isBlockBush(block)) {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - i))
                 }
             }

@@ -548,15 +548,15 @@ class Scaffold : Module() {
                 }
                 "ConstantSwitch" -> {
                     val slotchange = blockSlot * 0 + randomIntFrom(number1.get(), number2.get())
-                    //constantSwitch()
-                    if (blocktest.get()) {
+                    constantSwitch()
+                    /*if (blocktest.get()) {
                         mc.thePlayer!!.inventory.currentItem = slotchange.toInt()
                         mc.playerController.updateController()
                         ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
                     } else {
                         mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slotchange.toInt()))
                         ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
-                    }
+                    }*/
                 }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack

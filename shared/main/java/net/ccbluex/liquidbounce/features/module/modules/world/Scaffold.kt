@@ -16,8 +16,10 @@ import net.ccbluex.liquidbounce.api.minecraft.item.IItemStack
 import net.ccbluex.liquidbounce.api.minecraft.network.IPacket
 import net.ccbluex.liquidbounce.api.minecraft.network.play.client.ICPacketEntityAction
 import net.ccbluex.liquidbounce.api.minecraft.network.play.client.ICPacketHeldItemChange
-import net.ccbluex.liquidbounce.api.minecraft.util.*
+import net.ccbluex.liquidbounce.api.minecraft.util.IMovingObjectPosition
+import net.ccbluex.liquidbounce.api.minecraft.util.WBlockPos
 import net.ccbluex.liquidbounce.api.minecraft.util.WMathHelper.wrapAngleTo180_float
+import net.ccbluex.liquidbounce.api.minecraft.util.WVec3
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
@@ -35,13 +37,17 @@ import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 import net.ccbluex.liquidbounce.value.IntegerValue
 import net.ccbluex.liquidbounce.value.ListValue
-import net.minecraft.item.ItemBlock
 import org.lwjgl.input.Keyboard
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import kotlin.math.*
 
-@ModuleInfo(name = "Scaffold", description = "Automatically places blocks beneath your feet.", category = ModuleCategory.WORLD, keyBind = Keyboard.KEY_I)
+@ModuleInfo(
+    name = "Scaffold",
+    description = "Automatically places blocks beneath your feet.",
+    category = ModuleCategory.WORLD,
+    keyBind = Keyboard.KEY_I
+)
 class Scaffold : Module() {
 
     private val modeValue = ListValue("Mode", arrayOf("Normal", "Rewinside", "Expand"), "Normal")
@@ -520,43 +526,34 @@ class Scaffold : Module() {
             return
 
         var itemStack: IItemStack? = mc.thePlayer!!.heldItem
-        if (itemStack == null || !classProvider.isItemBlock(itemStack.item) ||
-            classProvider.isBlockBush(itemStack.item!!.asItemBlock().block) || mc.thePlayer!!.heldItem!!.stackSize <= 0
-        ) {
+        if (itemStack == null || !classProvider.isItemBlock(itemStack.item) || classProvider.isBlockBush(itemStack.item!!.asItemBlock().block) || mc.thePlayer!!.heldItem!!.stackSize <= 0) {
             if (autoBlockValue.get().equals("Off", true))
                 return
 
-            val blockSlot = InventoryUtils.findAutoBlockBlock()
+            val blockSlot = InventoryUtils.findAutoBlockBlock(autoBlockValue.get().equals("ConstantSwitch", true))
 
             if (blockSlot == -1)
                 return
-            when (autoBlockValue.get()) {
-                "Off" -> {
+            when (autoBlockValue.get().toLowerCase()) {
+                "off" -> {
                     return
                 }
-                "Matrix" -> {
+                "matrix" -> {
                     if (blockSlot - 36 != slot) {
                         mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                     }
                 }
-                "Spoof" -> {
+                "spoof" -> {
                     mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
                 }
-                "Switch" -> {
+                "switch" -> {
                     mc.thePlayer!!.inventory.currentItem = blockSlot - 36
                     mc.playerController.updateController()
                 }
-                "ConstantSwitch" -> {
-                    val slotchange = blockSlot * 0 + randomIntFrom(number1.get(), number2.get())
-                    constantSwitch()
-                    /*if (blocktest.get()) {
-                        mc.thePlayer!!.inventory.currentItem = slotchange.toInt()
-                        mc.playerController.updateController()
-                        ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
-                    } else {
-                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(slotchange.toInt()))
-                        ClientUtils.displayChatMessage("Blockslot: ${slotchange}")
-                    }*/
+                "constantswitch" -> {
+                    if (blockSlot - 36 != slot) {
+                        mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot - 36))
+                    }
                 }
             }
             itemStack = mc.thePlayer!!.inventoryContainer.getSlot(blockSlot).stack
@@ -863,18 +860,6 @@ class Scaffold : Module() {
             return amount
         }
 
-    private fun constantSwitch() {
-        for (i in number1.get()..number2.get()) {
-            val slot: IItemStack? = mc.thePlayer!!.inventoryContainer.getSlot(i).stack
-            blockSlot = InventoryUtils.findAutoBlockBlock()
-            if (slot is ItemBlock) {
-                mc.netHandler.addToSendQueue(classProvider.createCPacketHeldItemChange(blockSlot * 0 + i))
-                continue
-            } else {
-                break
-            }
-        }
-    }
     override val tag: String
         get() = modeValue.get()
 }

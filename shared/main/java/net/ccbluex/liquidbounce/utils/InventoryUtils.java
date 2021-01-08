@@ -17,8 +17,10 @@ import net.ccbluex.liquidbounce.event.Listenable;
 import net.ccbluex.liquidbounce.event.PacketEvent;
 import net.ccbluex.liquidbounce.utils.timer.MSTimer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public final class InventoryUtils extends MinecraftInstance implements Listenable {
 
@@ -28,6 +30,7 @@ public final class InventoryUtils extends MinecraftInstance implements Listenabl
             classProvider.getBlockEnum(BlockType.CRAFTING_TABLE), classProvider.getBlockEnum(BlockType.FURNACE), classProvider.getBlockEnum(BlockType.WATERLILY), classProvider.getBlockEnum(BlockType.DISPENSER), classProvider.getBlockEnum(BlockType.STONE_PRESSURE_PLATE), classProvider.getBlockEnum(BlockType.WODDEN_PRESSURE_PLATE),
             classProvider.getBlockEnum(BlockType.NOTEBLOCK), classProvider.getBlockEnum(BlockType.DROPPER), classProvider.getBlockEnum(BlockType.TNT), classProvider.getBlockEnum(BlockType.STANDING_BANNER), classProvider.getBlockEnum(BlockType.WALL_BANNER), classProvider.getBlockEnum(BlockType.REDSTONE_TORCH)
     );
+    private static Random random = new Random();
 
     public static int findItem(final int startSlot, final int endSlot, final IItem item) {
         for (int i = startSlot; i < endSlot; i++) {
@@ -52,6 +55,13 @@ public final class InventoryUtils extends MinecraftInstance implements Listenabl
     }
 
     public static int findAutoBlockBlock() {
+        return findAutoBlockBlock(false);
+    }
+
+    public static int findAutoBlockBlock(boolean randomBlock) {
+        ArrayList<Integer> fullBlocks = new ArrayList<>();
+        ArrayList<Integer> nonFullBlocks = new ArrayList<>();
+
         for (int i = 36; i < 45; i++) {
             final IItemStack itemStack = mc.getThePlayer().getInventoryContainer().getSlot(i).getStack();
 
@@ -61,7 +71,10 @@ public final class InventoryUtils extends MinecraftInstance implements Listenabl
 
                 if (block.isFullCube(block.getDefaultState()) && !BLOCK_BLACKLIST.contains(block)
                         && !classProvider.isBlockBush(block))
-                    return i;
+                    if (randomBlock)
+                        fullBlocks.add(i);
+                    else
+                        return i;
             }
         }
 
@@ -73,8 +86,18 @@ public final class InventoryUtils extends MinecraftInstance implements Listenabl
                 final IBlock block = itemBlock.getBlock();
 
                 if (!BLOCK_BLACKLIST.contains(block) && !classProvider.isBlockBush(block))
-                    return i;
+                    if (randomBlock)
+                        nonFullBlocks.add(i);
+                    else
+                        return i;
             }
+        }
+
+        if (fullBlocks.size() > 0) {
+            return fullBlocks.get(random.nextInt(fullBlocks.size()));
+        }
+        if (nonFullBlocks.size() > 0) {
+            return nonFullBlocks.get(random.nextInt(nonFullBlocks.size()));
         }
 
         return -1;

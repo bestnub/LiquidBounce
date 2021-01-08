@@ -17,7 +17,7 @@ import net.ccbluex.liquidbounce.value.IntegerValue
     category = ModuleCategory.FUN
 )
 
-class Spoof: Module() {
+class Spoof : Module() {
 
     private val allowValue = BoolValue("Allow", false)
     private val allowValue2 = BoolValue("Allow2", false)
@@ -27,9 +27,10 @@ class Spoof: Module() {
     private val debugValue = BoolValue("Debug", false)
     private val debugTicks = IntegerValue("Debug-Ticks", 0, 0, 20)
     private val blockSlotValue = IntegerValue("BlockSlot", 36, 0, 45)
+    private val randomBlockSlotValue = BoolValue("RandomBlockSlot", false)
 
     private var allowTick = TickTimer()
-    private var debugTick= TickTimer()
+    private var debugTick = TickTimer()
     private var blockSlot = -1
     private var slot = 0
 
@@ -40,18 +41,18 @@ class Spoof: Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
 
-        blockSlot = InventoryUtils.findAutoBlockBlock()
+        blockSlot = InventoryUtils.findAutoBlockBlock(randomBlockSlotValue.get())
         if (blockSlot == -1)
             return
 
-        if(debugValue.get()) {
+        if (debugValue.get()) {
             debugTick.update()
-            if(debugTick.hasTimePassed(debugTicks.get())) {
+            if (debugTick.hasTimePassed(debugTicks.get())) {
                 ClientUtils.displayChatMessage("Block slot: ${blockSlot}")
                 debugTick.reset()
             }
         } else return
-        if(mc.gameSettings.keyBindUseItem.pressed) {
+        if (mc.gameSettings.keyBindUseItem.pressed) {
             if (allowValue.get()) {
                 if (mc.thePlayer!!.inventory.currentItem != slot) {
                     mc.thePlayer!!.inventory.currentItem = slot

@@ -37,6 +37,7 @@ import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 import net.ccbluex.liquidbounce.value.IntegerValue
 import net.ccbluex.liquidbounce.value.ListValue
+import net.minecraft.util.MathHelper
 import org.lwjgl.input.Keyboard
 import org.lwjgl.opengl.GL11
 import java.awt.Color
@@ -204,6 +205,8 @@ class Scaffold : Module() {
         if (mc.thePlayer == null) return
         launchY = mc.thePlayer!!.posY.toInt()
         slot = mc.thePlayer!!.inventory.currentItem
+        facesBlock = false
+        limitedRotation = RotationUtils.serverRotation
         //oldslot = mc.thePlayer!!.inventory.currentItem
     }
 
@@ -694,9 +697,6 @@ class Scaffold : Module() {
         val xzSSV = calcStepSize(xzRV.toFloat())
         val yRV = yRangeValue.get().toDouble()
         val ySSV = calcStepSize(yRV.toFloat())
-        var xSearchFace = 0.0
-        var ySearchFace = 0.0
-        var zSearchFace = 0.0
         val eyesPos = WVec3(
             mc.thePlayer!!.posX,
             mc.thePlayer!!.entityBoundingBox.minY + mc.thePlayer!!.eyeHeight,
@@ -765,9 +765,6 @@ class Scaffold : Module() {
                             ) {
                                 placeRotation = PlaceRotation(PlaceInfo(neighbor, side.opposite, hitVec), rotation)
                             }
-                            xSearchFace = xSearch
-                            ySearchFace = ySearch
-                            zSearchFace = zSearch
                         }
                         zSearch += xzSSV
                     }
@@ -780,37 +777,25 @@ class Scaffold : Module() {
         if (!rotationModeValue.get().equals("Off", ignoreCase = true)) {
             if (minTurnSpeedValue.get() < 180) {
                 limitedRotation = RotationUtils.limitAngleChange(
-                    RotationUtils.serverRotation,
+                    limitedRotation,
                     placeRotation.rotation,
                     (Math.random() * (maxTurnSpeedValue.get() - minTurnSpeedValue.get()) + minTurnSpeedValue.get()).toFloat()
                 )
-                setRotation(limitedRotation!!, keepLengthValue.get())
-                lockRotation = limitedRotation
-                facesBlock = false
-                for (facingType in EnumFacingType.values()) {
-                    val side = classProvider.getEnumFacing(facingType)
-                    val neighbor = blockPosition.offset(side)
-                    if (!canBeClicked(neighbor)) continue
-                    val dirVec = WVec3(side.directionVec)
-                    val posVec = WVec3(blockPosition).addVector(xSearchFace, ySearchFace, zSearchFace)
-                    val distanceSqPosVec = eyesPos.squareDistanceTo(posVec)
-                    val hitVec = posVec.add(WVec3(dirVec.xCoord * 0.5, dirVec.yCoord * 0.5, dirVec.zCoord * 0.5))
-                    if (checks && (eyesPos.squareDistanceTo(hitVec) > 18.0 || distanceSqPosVec > eyesPos.squareDistanceTo(
-                            posVec.add(dirVec)
-                        ) || mc.theWorld!!.rayTraceBlocks(eyesPos, hitVec, false, true, false) != null)
-                    )
-                        continue
-                    val rotationVector = RotationUtils.getVectorForRotation(limitedRotation)
-                    val vector = eyesPos.addVector(
-                        rotationVector.xCoord * 4,
-                        rotationVector.yCoord * 4,
-                        rotationVector.zCoord * 4
-                    )
-                    val obj = mc.theWorld!!.rayTraceBlocks(eyesPos, vector, false, false, true)
-                    if (!(obj!!.typeOfHit === IMovingObjectPosition.WMovingObjectType.BLOCK && obj!!.blockPos!! == neighbor))
-                        continue
+
+                if ((10 * MathHelper.wrapAngleTo180_float(limitedRotation!!.yaw)).roundToInt() == (10 * MathHelper.wrapAngleTo180_float(
+                        placeRotation.rotation.yaw
+                    )).roundToInt() &&
+                    (10 * MathHelper.wrapAngleTo180_float(limitedRotation!!.pitch)).roundToInt() == (10 * MathHelper.wrapAngleTo180_float(
+                        placeRotation.rotation.pitch
+                    )).roundToInt()
+                ) {
+                    setRotation(placeRotation.rotation, keepLengthValue.get())
+                    lockRotation = placeRotation.rotation
                     facesBlock = true
-                    break
+                } else {
+                    setRotation(limitedRotation!!, keepLengthValue.get())
+                    lockRotation = limitedRotation
+                    facesBlock = false
                 }
             } else {
                 setRotation(placeRotation.rotation, keepLengthValue.get())
